@@ -1,9 +1,7 @@
-#include "Bar.h"
+#include "core/Bar.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-
-#include "Bar.h"
 
 TEST(BarTest, RunReturnsBarString) {
   // Arrange

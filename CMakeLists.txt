@@ -12,11 +12,22 @@ find_package(GTest CONFIG REQUIRED)
 find_package(SDL3 REQUIRED)
 
 add_library(core
-    src/Foo.cpp
-    src/Bar.cpp
+    src/core/Foo.cpp
+    src/core/Bar.cpp
 )
 
 target_include_directories(core PUBLIC src)
+
+add_library(game
+    src/game/Game.cpp
+)
+
+target_link_libraries(game PRIVATE
+    sdl::sdl
+    core
+)
+
+target_include_directories(game PUBLIC src)
 
 add_executable(app
     src/main.cpp
@@ -31,9 +42,8 @@ add_custom_command(TARGET app POST_BUILD
 )
 
 target_link_libraries(app PRIVATE
-
-    sdl::sdl
     core
+    game
 )
 
 target_link_options(app PRIVATE
@@ -42,8 +52,8 @@ target_link_options(app PRIVATE
 )
 
 add_executable(app_tests
-    tests/FooTest.cpp
-    tests/BarTest.cpp
+    tests/core/FooTest.cpp
+    tests/core/BarTest.cpp
 )
 
 target_include_directories(app_tests PUBLIC
@@ -52,6 +62,8 @@ target_include_directories(app_tests PUBLIC
 
 target_link_libraries(app_tests PRIVATE
     core
+    game
+    sdl::sdl
     gtest::gtest
     GTest::gtest_main
     GTest::gmock

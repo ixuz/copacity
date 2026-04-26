@@ -1,9 +1,9 @@
-#include "Foo.h"
+#include "core/Foo.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include "Bar.h"
+#include "core/Bar.h"
 
 #include "mocks/BarMock.h"
 

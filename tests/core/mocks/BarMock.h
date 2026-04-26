@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Bar.h"
+#include "core/Bar.h"
 
 #include <gmock/gmock.h>
 #include <string>
