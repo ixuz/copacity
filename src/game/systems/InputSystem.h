@@ -8,9 +8,7 @@
 
 class InputSystem : public ecs::System {
 public:
-  void fixedUpdate(ecs::Registry &reg, float) override {
-    // NOOP
-  }
+  void fixedUpdate(ecs::Registry &reg, float) override {}
 
   void update(ecs::Registry &reg, float) override {
     SDL_Event event;

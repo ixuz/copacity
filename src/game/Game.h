@@ -1,7 +1,9 @@
 #pragma once
 
-struct SDL_Window;
-struct SDL_Renderer;
+#include "core/ecs/Registry.h"
+#include "core/ecs/Systems.h"
+
+#include "SDLContext.h"
 
 class Game {
 public:
@@ -10,7 +12,9 @@ public:
   void run();
 
 private:
-  SDL_Window *window;
-  SDL_Renderer *renderer;
+  SDLContext sdl;
+  ecs::Registry registry;
+  ecs::Systems logicSystems;
+  ecs::Systems renderSystems;
   float fixedStep;
 };

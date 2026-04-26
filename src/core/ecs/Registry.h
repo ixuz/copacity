@@ -98,6 +98,13 @@ public:
     return store ? store->has(e) : false;
   }
 
+  template <typename T> T *first() {
+    for (auto [e, c] : view<T>()) {
+      return &c;
+    }
+    return nullptr;
+  }
+
   template <typename... Ts> class View {
   public:
     View(Registry &reg) : registry(reg) {
