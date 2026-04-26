@@ -1,0 +1,74 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "conan: install (windows)",
+      "type": "shell",
+      "command": "rm -Rf build && conan install . -of build/windows --build missing -pr:h=profiles/windows",
+      "problemMatcher": []
+    },
+    {
+      "label": "cmake: configure (windows)",
+      "type": "shell",
+      "command": "cmake --preset conan-windows",
+      "problemMatcher": []
+    },
+    {
+      "label": "cmake: build (windows)",
+      "type": "shell",
+      "command": "cmake --build --preset conan-windows",
+      "problemMatcher": []
+    },
+    {
+      "label": "build (windows)",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "conan: install (windows)",
+        "cmake: configure (windows)",
+        "cmake: build (windows)"
+      ]
+    },
+    {
+      "label": "conan: install (linux)",
+      "type": "shell",
+      "command": "rm -Rf build && conan install . -of build/linux --build missing -pr:h=profiles/linux",
+      "problemMatcher": []
+    },
+    {
+      "label": "cmake: configure (linux)",
+      "type": "shell",
+      "command": "cmake --preset conan-linux",
+      "problemMatcher": []
+    },
+    {
+      "label": "cmake: build (linux)",
+      "type": "shell",
+      "command": "cmake --build --preset conan-linux",
+      "problemMatcher": []
+    },
+    {
+      "label": "test (linux)",
+      "type": "shell",
+      "command": "./bin/app_tests",
+      "problemMatcher": []
+    },
+    {
+      "label": "build (linux)",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "conan: install (linux)",
+        "cmake: configure (linux)",
+        "cmake: build (linux)",
+        "test (linux)"
+      ]
+    },
+    {
+      "label": "build (all)",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "build (windows)",
+        "build (linux)"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "version": 3,
+
+  "configurePresets": [
+    {
+      "name": "conan-windows",
+      "generator": "Unix Makefiles",
+      "binaryDir": "build/windows",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_TOOLCHAIN_FILE": "build/windows/conan_toolchain.cmake",
+        "CMAKE_CXX_COMPILER": "/usr/bin/x86_64-w64-mingw32-g++"
+      }
+    },
+    {
+      "name": "conan-linux",
+      "generator": "Unix Makefiles",
+      "binaryDir": "build/linux",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_TOOLCHAIN_FILE": "build/linux/conan_toolchain.cmake"
+      }
+    }
+  ],
+
+  "buildPresets": [
+    {
+      "name": "conan-windows",
+      "configurePreset": "conan-windows"
+    },
+    {
+      "name": "conan-linux",
+      "configurePreset": "conan-linux"
+    }
+  ]
+}
