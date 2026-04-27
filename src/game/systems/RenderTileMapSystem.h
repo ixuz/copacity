@@ -6,6 +6,7 @@
 #include "game/components/TileMap.h"
 
 #include <SDL3/SDL.h>
+#include <chrono>
 #include <format>
 #include <stdexcept>
 
@@ -16,9 +17,9 @@ public:
   explicit RenderTileMapSystem(SDL_Renderer *renderer, Assets &assets)
       : renderer(renderer), assets(assets) {}
 
-  void fixedUpdate(ecs::Registry &, float) override {}
+  void fixedUpdate(ecs::Registry &, std::chrono::duration<float>) override {}
 
-  void update(ecs::Registry &reg, float) override {
+  void update(ecs::Registry &reg, std::chrono::duration<float>) override {
     for (auto [e, tileMap, spriteSheet] : reg.view<TileMap, SpriteSheet>()) {
       for (int y = 0; y < tileMap.height; y++) {
         for (int x = 0; x < tileMap.width; x++) {

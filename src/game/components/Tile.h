@@ -1,5 +1,7 @@
 #pragma once
 
+#include "core/Types.h"
+
 #include <cstdint>
 
 enum Direction : uint8_t {
@@ -11,6 +13,6 @@ enum Direction : uint8_t {
 };
 
 struct Tile {
-  int spriteId;
+  core::SpriteId spriteId;
   uint8_t directions;
 };

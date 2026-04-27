@@ -12,12 +12,12 @@ struct Assets;
 
 class AnimationSystem : public ecs::System {
 public:
-  void fixedUpdate(ecs::Registry &, float) override {}
+  void fixedUpdate(ecs::Registry &, std::chrono::duration<float>) override {}
 
-  void update(ecs::Registry &reg, float dt) override {
+  void update(ecs::Registry &reg, std::chrono::duration<float> dt) override {
     for (auto [e, animation, spriteSheet] :
          reg.view<Animation, SpriteSheet>()) {
-      animation.elapsedTime += dt;
+      animation.elapsedTime += std::chrono::duration<float>(dt);
 
       size_t frameCount = animation.frames.size();
       size_t frameIndex =

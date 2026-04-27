@@ -7,6 +7,8 @@
 #include "core/ecs/Registry.h"
 #include "core/ecs/Systems.h"
 
+#include <chrono>
+
 class Game {
 public:
   explicit Game(float ticksPerSecond);
@@ -24,5 +26,5 @@ private:
   ecs::Registry registry;
   ecs::Systems logicSystems;
   ecs::Systems renderSystems;
-  const float fixedStep;
+  std::chrono::duration<float> fixedStep;
 };

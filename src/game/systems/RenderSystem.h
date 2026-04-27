@@ -6,6 +6,7 @@
 
 #include <SDL3/SDL.h>
 #include <algorithm>
+#include <chrono>
 #include <format>
 #include <iostream>
 #include <stdexcept>
@@ -25,9 +26,9 @@ public:
   explicit RenderSystem(SDL_Renderer *renderer, Assets &assets)
       : renderer(renderer), assets(assets) {}
 
-  void fixedUpdate(ecs::Registry &, float) override {}
+  void fixedUpdate(ecs::Registry &, std::chrono::duration<float>) override {}
 
-  void update(ecs::Registry &reg, float) override {
+  void update(ecs::Registry &reg, std::chrono::duration<float>) override {
     std::vector<RenderItem> renderItems;
 
     for (auto [e, position, spriteSheet, renderLayer] :

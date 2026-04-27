@@ -8,9 +8,9 @@
 
 class InputSystem : public ecs::System {
 public:
-  void fixedUpdate(ecs::Registry &, float) override {}
+  void fixedUpdate(ecs::Registry &, std::chrono::duration<float>) override {}
 
-  void update(ecs::Registry &reg, float) override {
+  void update(ecs::Registry &reg, std::chrono::duration<float>) override {
     SDL_Event event;
 
     bool quit = false;

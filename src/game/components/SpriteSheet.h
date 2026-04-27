@@ -1,8 +1,10 @@
 #pragma once
 
+#include "core/Types.h"
+
 struct SpriteSheet {
-  int textureId;
-  int spriteId;
+  core::TextureId textureId;
+  core::SpriteId spriteId;
   int width;
   int height;
   int cols;

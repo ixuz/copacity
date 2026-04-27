@@ -1,5 +1,7 @@
 #pragma once
 
+#include "core/Types.h"
+
 #include <SDL3/SDL.h>
 #include <cstdint>
 #include <memory>
@@ -14,17 +16,15 @@ struct TextureDeleter {
 
 using Texture = std::unique_ptr<SDL_Texture, TextureDeleter>;
 
-using TextureId = std::uint32_t;
-
 class Assets {
 public:
   Assets(SDL_Renderer &renderer) noexcept;
   ~Assets() = default;
-  TextureId loadTexture(std::string_view path);
-  SDL_Texture *getTexture(TextureId textureId) const noexcept;
+  core::TextureId loadTexture(std::string_view path);
+  SDL_Texture *getTexture(core::TextureId textureId) const noexcept;
 
 private:
   SDL_Renderer &renderer;
-  std::unordered_map<TextureId, Texture> textures;
-  TextureId nextTextureId = 1;
+  std::unordered_map<core::TextureId, Texture> textures;
+  core::TextureId nextTextureId = 1;
 };

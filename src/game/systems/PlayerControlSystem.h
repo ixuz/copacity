@@ -11,7 +11,7 @@
 
 class PlayerControlSystem : public ecs::System {
 public:
-  void fixedUpdate(ecs::Registry &reg, float) override {
+  void fixedUpdate(ecs::Registry &reg, std::chrono::duration<float>) override {
     for (auto [e, player, input, position, velocity] :
          reg.view<Player, Input, Position, Velocity>()) {
 
@@ -72,5 +72,5 @@ public:
     }
   }
 
-  void update(ecs::Registry &, float) override {}
+  void update(ecs::Registry &, std::chrono::duration<float>) override {}
 };

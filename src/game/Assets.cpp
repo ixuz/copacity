@@ -13,7 +13,7 @@ struct SDLSurfaceDeleter {
 
 Assets::Assets(SDL_Renderer &renderer) noexcept : renderer(renderer) {}
 
-TextureId Assets::loadTexture(std::string_view path) {
+core::TextureId Assets::loadTexture(std::string_view path) {
   using Surface = std::unique_ptr<SDL_Surface, SDLSurfaceDeleter>;
 
   Surface surface(SDL_LoadPNG(std::string(path).c_str()));
@@ -34,14 +34,14 @@ TextureId Assets::loadTexture(std::string_view path) {
         std::format("SDL_SetTextureScaleMode failed: {}", SDL_GetError()));
   }
 
-  TextureId textureId = nextTextureId++;
+  core::TextureId textureId = nextTextureId++;
 
   textures.emplace(textureId, Texture{texture});
 
   return textureId;
 }
 
-SDL_Texture *Assets::getTexture(TextureId textureId) const noexcept {
+SDL_Texture *Assets::getTexture(core::TextureId textureId) const noexcept {
   auto it = textures.find(textureId);
   if (it != textures.end()) {
     return it->second.get();

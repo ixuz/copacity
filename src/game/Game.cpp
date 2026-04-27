@@ -25,8 +25,8 @@ Game::Game(float ticksPerSecond)
     : context("Copacity", 640, 480, 4), assets(*context.getRenderer()),
       fixedStep(1.0f / ticksPerSecond) {
 
-  int playerTextureId = assets.loadTexture("assets/player.png");
-  int pathTextureId = assets.loadTexture("assets/path.png");
+  auto playerTextureId = assets.loadTexture("assets/player.png");
+  auto pathTextureId = assets.loadTexture("assets/path.png");
 
   logicSystems.add<InputSystem>();
   logicSystems.add<PlayerControlSystem>();
@@ -37,30 +37,33 @@ Game::Game(float ticksPerSecond)
   renderSystems.add<RenderSystem>(context.getRenderer(), assets);
   renderSystems.add<PrintFpsSystem>();
 
-  auto entity = registry.create();
-  registry.add(entity, Player{});
-  registry.add(entity, Input{});
-  registry.add(entity, SpriteSheet{.textureId{playerTextureId},
-                                   .spriteId{0},
-                                   .width{32},
-                                   .height{32},
-                                   .cols{2},
-                                   .rows{2}});
-  registry.add(entity, Position{0, 0});
-  registry.add(entity, Velocity{0, 0});
-  registry.add(entity, Animation{.frames{0, 1, 2, 3}, .frameTime{1.0f / 8.0f}});
-  registry.add(entity, RenderLayer{0});
-
-  auto tilemapEntity = registry.create();
-  registry.add(tilemapEntity, Map{});
-  registry.add(tilemapEntity, SpriteSheet{.textureId{pathTextureId},
-                                          .spriteId{0},
-                                          .width{80},
-                                          .height{64},
-                                          .cols{5},
-                                          .rows{4}});
+  auto playerEntity = registry.create();
+  registry.add(playerEntity, Player{});
+  registry.add(playerEntity, Input{});
+  registry.add(playerEntity, SpriteSheet{.textureId{playerTextureId},
+                                         .spriteId{0},
+                                         .width{32},
+                                         .height{32},
+                                         .cols{2},
+                                         .rows{2}});
+  registry.add(playerEntity, Position{0, 0});
+  registry.add(playerEntity, Velocity{0, 0});
   registry.add(
-      tilemapEntity,
+      playerEntity,
+      Animation{.frames{0, 1, 2, 3},
+                .frameTime{std::chrono::duration<float>(1.0f / 8.0f)}});
+  registry.add(playerEntity, RenderLayer{0});
+
+  auto mapEntity = registry.create();
+  registry.add(mapEntity, Map{});
+  registry.add(mapEntity, SpriteSheet{.textureId{pathTextureId},
+                                      .spriteId{0},
+                                      .width{80},
+                                      .height{64},
+                                      .cols{5},
+                                      .rows{4}});
+  registry.add(
+      mapEntity,
       TileMap{.width = 3,
               .height = 3,
               .tiles = {
@@ -83,8 +86,8 @@ void Game::run() {
   using clock = std::chrono::high_resolution_clock;
   auto lastTime = clock::now();
 
-  float accumulator = 0.0f;
-  float totalTime = 0.0f;
+  std::chrono::duration<float> accumulator{0.0f};
+  std::chrono::duration<float> totalTime{0.0f};
 
   bool running = true;
   while (running) {
@@ -95,7 +98,7 @@ void Game::run() {
     std::chrono::duration<float> frameTime = now - lastTime;
     lastTime = now;
 
-    float dt = frameTime.count();
+    std::chrono::duration<float> dt = frameTime;
     totalTime += dt;
     accumulator += dt;
 
