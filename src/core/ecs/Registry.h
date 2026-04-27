@@ -105,6 +105,13 @@ public:
     return nullptr;
   }
 
+  template <typename T> std::optional<Entity> firstEntity() {
+    for (auto [e, _] : view<T>()) {
+      return e;
+    }
+    return std::nullopt;
+  }
+
   template <typename... Ts> class View {
   public:
     View(Registry &reg) : registry(reg) {

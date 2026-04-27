@@ -1,9 +1,9 @@
 #pragma once
 
+#include "Assets.h"
+#include "SDLContext.h"
 #include "core/ecs/Registry.h"
 #include "core/ecs/Systems.h"
-
-#include "SDLContext.h"
 
 class Game {
 public:
@@ -13,6 +13,7 @@ public:
 
 private:
   SDLContext sdl;
+  Assets assets;
   ecs::Registry registry;
   ecs::Systems logicSystems;
   ecs::Systems renderSystems;

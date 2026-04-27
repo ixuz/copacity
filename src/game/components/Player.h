@@ -1,5 +1,5 @@
 #pragma once
 
 struct Player {
-  float moveSpeed = 250;
+  float moveSpeed = 100;
 };

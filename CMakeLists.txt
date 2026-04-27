@@ -21,6 +21,7 @@ target_include_directories(core PUBLIC src)
 add_library(game
     src/game/Game.cpp
     src/game/SDLContext.cpp
+    src/game/Assets.cpp
 )
 
 target_link_libraries(game PRIVATE

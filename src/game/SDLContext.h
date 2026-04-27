@@ -7,7 +7,7 @@ struct SDL_Renderer;
 
 class SDLContext {
 public:
-  SDLContext(std::string title, int width, int height);
+  SDLContext(std::string title, int width, int height, int logicalScale);
   ~SDLContext();
   SDL_Window *getWindow() const noexcept { return window; }
   SDL_Renderer *getRenderer() const noexcept { return renderer; }
