@@ -11,7 +11,7 @@
 
 class PlayerControlSystem : public ecs::System {
 public:
-  void fixedUpdate(ecs::Registry &reg, float dt) override {
+  void fixedUpdate(ecs::Registry &reg, float) override {
     for (auto [e, player, input, position, velocity] :
          reg.view<Player, Input, Position, Velocity>()) {
 
@@ -66,13 +66,11 @@ public:
           yVelocity = -1;
         }
 
-        position.x += xVelocity * tileSizeX;
-        position.y += yVelocity * tileSizeY;
+        position.x += static_cast<float>(xVelocity * tileSizeX);
+        position.y += static_cast<float>(yVelocity * tileSizeY);
       }
     }
   }
 
-  void update(ecs::Registry &reg, float dt) override {
-    // NOOP
-  }
+  void update(ecs::Registry &, float) override {}
 };

@@ -1,21 +1,30 @@
 #pragma once
 
-#include <string>
+#include <SDL3/SDL.h>
+#include <cstdint>
+#include <memory>
+#include <string_view>
 #include <unordered_map>
 
-struct SDL_Window;
-struct SDL_Renderer;
-struct SDL_Texture;
+struct TextureDeleter {
+  void operator()(SDL_Texture *texture) const noexcept {
+    SDL_DestroyTexture(texture);
+  }
+};
+
+using Texture = std::unique_ptr<SDL_Texture, TextureDeleter>;
+
+using TextureId = std::uint32_t;
 
 class Assets {
 public:
-  Assets(SDL_Renderer *renderer);
-  ~Assets();
-  int loadTexture(const std::string &path);
-  SDL_Texture *getTexture(int id) const;
+  Assets(SDL_Renderer &renderer) noexcept;
+  ~Assets() = default;
+  TextureId loadTexture(std::string_view path);
+  SDL_Texture *getTexture(TextureId textureId) const noexcept;
 
 private:
-  SDL_Renderer *renderer;
-  std::unordered_map<int, SDL_Texture *> textures;
-  int nextId = 1;
+  SDL_Renderer &renderer;
+  std::unordered_map<TextureId, Texture> textures;
+  TextureId nextTextureId = 1;
 };

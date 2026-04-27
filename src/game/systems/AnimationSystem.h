@@ -12,16 +12,17 @@ struct Assets;
 
 class AnimationSystem : public ecs::System {
 public:
-  void fixedUpdate(ecs::Registry &reg, float dt) override {}
+  void fixedUpdate(ecs::Registry &, float) override {}
 
   void update(ecs::Registry &reg, float dt) override {
     for (auto [e, animation, spriteSheet] :
          reg.view<Animation, SpriteSheet>()) {
       animation.elapsedTime += dt;
 
-      int frameIndex =
-          static_cast<int>(animation.elapsedTime / animation.frameTime) %
-          animation.frames.size();
+      size_t frameCount = animation.frames.size();
+      size_t frameIndex =
+          static_cast<size_t>(animation.elapsedTime / animation.frameTime) %
+          frameCount;
 
       spriteSheet.spriteId = animation.frames.at(frameIndex);
     }

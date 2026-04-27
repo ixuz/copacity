@@ -22,7 +22,7 @@
 #include <iostream>
 
 Game::Game(float ticksPerSecond)
-    : context("Copacity", 640, 480, 4), assets(context.getRenderer()),
+    : context("Copacity", 640, 480, 4), assets(*context.getRenderer()),
       fixedStep(1.0f / ticksPerSecond) {
 
   int playerTextureId = assets.loadTexture("assets/player.png");

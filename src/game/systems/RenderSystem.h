@@ -6,7 +6,9 @@
 
 #include <SDL3/SDL.h>
 #include <algorithm>
+#include <format>
 #include <iostream>
+#include <stdexcept>
 #include <vector>
 
 struct Assets;
@@ -23,9 +25,9 @@ public:
   explicit RenderSystem(SDL_Renderer *renderer, Assets &assets)
       : renderer(renderer), assets(assets) {}
 
-  void fixedUpdate(ecs::Registry &reg, float dt) override {}
+  void fixedUpdate(ecs::Registry &, float) override {}
 
-  void update(ecs::Registry &reg, float dt) override {
+  void update(ecs::Registry &reg, float) override {
     std::vector<RenderItem> renderItems;
 
     for (auto [e, position, spriteSheet, renderLayer] :
@@ -46,24 +48,29 @@ public:
           renderItem.spriteSheet->height / renderItem.spriteSheet->rows;
 
       SDL_FRect srcrect;
-      srcrect.x =
+      srcrect.x = static_cast<float>(
           (renderItem.spriteSheet->spriteId % renderItem.spriteSheet->cols) *
-          spriteWidth;
-      srcrect.y =
+          spriteWidth);
+      srcrect.y = static_cast<float>(
           (renderItem.spriteSheet->spriteId / renderItem.spriteSheet->cols) *
-          spriteHeight;
-      srcrect.w = spriteWidth;
-      srcrect.h = spriteHeight;
+          spriteHeight);
+      srcrect.w = static_cast<float>(spriteWidth);
+      srcrect.h = static_cast<float>(spriteHeight);
 
       SDL_FRect dstrect;
       dstrect.x = renderItem.position->x;
       dstrect.y = renderItem.position->y;
-      dstrect.w = spriteWidth;
-      dstrect.h = spriteHeight;
+      dstrect.w = static_cast<float>(spriteWidth);
+      dstrect.h = static_cast<float>(spriteHeight);
 
-      SDL_RenderTexture(renderer,
-                        assets.getTexture(renderItem.spriteSheet->textureId),
-                        &srcrect, &dstrect);
+      int textureId = renderItem.spriteSheet->textureId;
+      auto texture = assets.getTexture(textureId);
+      if (!texture) {
+        throw std::runtime_error(std::format(
+            "Failed to find texture in assets with textureId: {}", textureId));
+      }
+
+      SDL_RenderTexture(renderer, texture, &srcrect, &dstrect);
     }
   }
 

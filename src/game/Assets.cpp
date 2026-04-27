@@ -4,23 +4,25 @@
 #include <format>
 #include <iostream>
 
-Assets::Assets(SDL_Renderer *renderer) : renderer(renderer) {}
-
-Assets::~Assets() {
-  for (auto &pair : textures) {
-    SDL_DestroyTexture(pair.second);
+struct SDLSurfaceDeleter {
+  void operator()(SDL_Surface *surface) const noexcept {
+    if (surface)
+      SDL_DestroySurface(surface);
   }
-}
+};
 
-int Assets::loadTexture(const std::string &path) {
-  SDL_Surface *surface = SDL_LoadPNG(path.c_str());
+Assets::Assets(SDL_Renderer &renderer) noexcept : renderer(renderer) {}
+
+TextureId Assets::loadTexture(std::string_view path) {
+  using Surface = std::unique_ptr<SDL_Surface, SDLSurfaceDeleter>;
+
+  Surface surface(SDL_LoadPNG(std::string(path).c_str()));
   if (!surface) {
     throw std::runtime_error(
-        std::format("SDL_LoadBMP failed: {}", SDL_GetError()));
+        std::format("SDL_LoadPNG failed: {}", SDL_GetError()));
   }
 
-  SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-  SDL_DestroySurface(surface);
+  SDL_Texture *texture = SDL_CreateTextureFromSurface(&renderer, surface.get());
 
   if (!texture) {
     throw std::runtime_error(
@@ -32,16 +34,17 @@ int Assets::loadTexture(const std::string &path) {
         std::format("SDL_SetTextureScaleMode failed: {}", SDL_GetError()));
   }
 
-  int id = nextId++;
-  textures[id] = texture;
+  TextureId textureId = nextTextureId++;
 
-  return id;
+  textures.emplace(textureId, Texture{texture});
+
+  return textureId;
 }
 
-SDL_Texture *Assets::getTexture(int id) const {
-  auto it = textures.find(id);
+SDL_Texture *Assets::getTexture(TextureId textureId) const noexcept {
+  auto it = textures.find(textureId);
   if (it != textures.end()) {
-    return it->second;
+    return it->second.get();
   }
   return nullptr;
 }

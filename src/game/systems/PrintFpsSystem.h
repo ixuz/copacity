@@ -7,13 +7,13 @@
 
 class PrintFpsSystem : public ecs::System {
 public:
-  void fixedUpdate(ecs::Registry &reg, float dt) override {}
-  void update(ecs::Registry &reg, float dt) override {
+  void fixedUpdate(ecs::Registry &, float) override {}
+  void update(ecs::Registry &, float dt) override {
     frameCount++;
     timeAccumulator += dt;
 
     if (timeAccumulator >= 1.0f) {
-      float fps = frameCount / timeAccumulator;
+      float fps = static_cast<float>(frameCount) / timeAccumulator;
       std::cout << "FPS: " << fps << std::endl;
 
       frameCount = 0;

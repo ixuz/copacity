@@ -14,7 +14,5 @@ public:
     }
   }
 
-  void update(ecs::Registry &reg, float dt) override {
-    // NOOP
-  }
+  void update(ecs::Registry &, float) override {}
 };

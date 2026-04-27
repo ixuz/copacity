@@ -20,6 +20,14 @@ target_link_libraries(core PRIVATE
     sdl::sdl
 )
 
+target_compile_options(core PRIVATE
+    -Wall
+    -Wextra
+    -Wpedantic
+    -Wconversion
+    -Werror
+)
+
 target_include_directories(core PUBLIC src)
 
 add_library(game
@@ -30,6 +38,14 @@ add_library(game
 target_link_libraries(game PRIVATE
     sdl::sdl
     core
+)
+
+target_compile_options(game PRIVATE
+    -Wall
+    -Wextra
+    -Wpedantic
+    -Wconversion
+    -Werror
 )
 
 target_include_directories(game PUBLIC src)
@@ -55,6 +71,14 @@ target_link_libraries(app PRIVATE
 target_link_options(app PRIVATE
     -static-libgcc
     -static-libstdc++
+)
+
+target_compile_options(app PRIVATE
+    -Wall
+    -Wextra
+    -Wpedantic
+    -Wconversion
+    -Werror
 )
 
 add_executable(app_tests
