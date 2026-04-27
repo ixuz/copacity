@@ -22,7 +22,7 @@
 #include <iostream>
 
 Game::Game(float ticksPerSecond)
-    : sdl("Copacity", 640, 480, 2), assets(sdl.getRenderer()),
+    : context("Copacity", 640, 480, 4), assets(context.getRenderer()),
       fixedStep(1.0f / ticksPerSecond) {
 
   int playerTextureId = assets.loadTexture("assets/player.png");
@@ -33,8 +33,8 @@ Game::Game(float ticksPerSecond)
   logicSystems.add<MovementSystem>();
 
   renderSystems.add<AnimationSystem>();
-  renderSystems.add<RenderSystem>(sdl.getRenderer(), assets);
-  renderSystems.add<RenderTileMapSystem>(sdl.getRenderer(), assets);
+  renderSystems.add<RenderTileMapSystem>(context.getRenderer(), assets);
+  renderSystems.add<RenderSystem>(context.getRenderer(), assets);
   renderSystems.add<PrintFpsSystem>();
 
   auto entity = registry.create();
@@ -76,8 +76,6 @@ Game::Game(float ticksPerSecond)
               }});
 }
 
-Game::~Game() {}
-
 // TODO: Decouple simulation from render thread
 void Game::run() {
   auto *input = registry.first<Input>();
@@ -108,11 +106,11 @@ void Game::run() {
 
     logicSystems.update(registry, dt);
 
-    SDL_SetRenderDrawColor(sdl.getRenderer(), 0x00, 0x00, 0x00, 0x00);
-    SDL_RenderClear(sdl.getRenderer());
+    SDL_SetRenderDrawColor(context.getRenderer(), 0x00, 0x00, 0x00, 0x00);
+    SDL_RenderClear(context.getRenderer());
 
     renderSystems.update(registry, dt);
 
-    SDL_RenderPresent(sdl.getRenderer());
+    SDL_RenderPresent(context.getRenderer());
   }
 }

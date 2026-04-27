@@ -1,21 +1,28 @@
 #pragma once
 
 #include "Assets.h"
-#include "SDLContext.h"
+#include "core/gfx/Context.h"
+#include "core/gfx/Init.h"
+
 #include "core/ecs/Registry.h"
 #include "core/ecs/Systems.h"
 
 class Game {
 public:
   explicit Game(float ticksPerSecond);
-  ~Game();
+  Game(const Game &) = delete;
+  Game &operator=(const Game &) = delete;
+  Game(Game &&) = default;
+  Game &operator=(Game &&) = default;
+  ~Game() = default;
   void run();
 
 private:
-  SDLContext sdl;
+  sdl::Init init;
+  sdl::Context context;
   Assets assets;
   ecs::Registry registry;
   ecs::Systems logicSystems;
   ecs::Systems renderSystems;
-  float fixedStep;
+  const float fixedStep;
 };

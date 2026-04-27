@@ -16,11 +16,14 @@ add_library(core
     src/core/Bar.cpp
 )
 
+target_link_libraries(core PRIVATE
+    sdl::sdl
+)
+
 target_include_directories(core PUBLIC src)
 
 add_library(game
     src/game/Game.cpp
-    src/game/SDLContext.cpp
     src/game/Assets.cpp
 )
 
@@ -46,6 +49,7 @@ add_custom_command(TARGET app POST_BUILD
 target_link_libraries(app PRIVATE
     core
     game
+    sdl::sdl
 )
 
 target_link_options(app PRIVATE
