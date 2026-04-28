@@ -8,9 +8,7 @@
 
 class InputSystem : public ecs::System {
 public:
-  void fixedUpdate(ecs::Registry &, std::chrono::duration<float>) override {}
-
-  void update(ecs::Registry &reg, std::chrono::duration<float>) override {
+  void fixedUpdate(ecs::Registry &reg, std::chrono::duration<float>) override {
     SDL_Event event;
 
     bool quit = false;
@@ -27,15 +25,7 @@ public:
       }
     }
 
-    SDL_PumpEvents();
-
     const bool *keyboardState = SDL_GetKeyboardState(NULL);
-
-    if (event.type == SDL_EVENT_KEY_DOWN) {
-      if (event.key.key == SDLK_ESCAPE) {
-        quit = true;
-      }
-    }
 
     for (auto [e, input] : reg.view<Input>()) {
       input.quit = quit;
@@ -45,4 +35,6 @@ public:
       input.down = keyboardState[SDL_SCANCODE_DOWN];
     }
   }
+
+  void update(ecs::Registry &, std::chrono::duration<float>) override {}
 };

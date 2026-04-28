@@ -49,7 +49,7 @@
     {
       "label": "test (linux)",
       "type": "shell",
-      "command": "./bin/app_tests",
+      "command": "./bin/core_tests",
       "problemMatcher": []
     },
     {

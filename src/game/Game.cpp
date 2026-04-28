@@ -95,10 +95,9 @@ void Game::run() {
       running = false;
 
     auto now = clock::now();
-    std::chrono::duration<float> frameTime = now - lastTime;
+    std::chrono::duration<float> dt = now - lastTime;
     lastTime = now;
 
-    std::chrono::duration<float> dt = frameTime;
     totalTime += dt;
     accumulator += dt;
 
@@ -106,8 +105,6 @@ void Game::run() {
       logicSystems.fixedUpdate(registry, fixedStep);
       accumulator -= fixedStep;
     }
-
-    logicSystems.update(registry, dt);
 
     SDL_SetRenderDrawColor(context.getRenderer(), 0x00, 0x00, 0x00, 0x00);
     SDL_RenderClear(context.getRenderer());
