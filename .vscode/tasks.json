@@ -4,7 +4,7 @@
     {
       "label": "conan: install (windows)",
       "type": "shell",
-      "command": "rm -Rf build && conan install . -of build/windows --build missing -pr:h=profiles/windows",
+      "command": "rm -Rf build && conan install . -of build/windows --build missing -pr:h=conan/profiles/windows",
       "problemMatcher": []
     },
     {
@@ -31,7 +31,7 @@
     {
       "label": "conan: install (linux)",
       "type": "shell",
-      "command": "rm -Rf build && conan install . -of build/linux --build missing -pr:h=profiles/linux",
+      "command": "rm -Rf build && conan install . -of build/linux --build missing -pr:h=conan/profiles/linux",
       "problemMatcher": []
     },
     {
