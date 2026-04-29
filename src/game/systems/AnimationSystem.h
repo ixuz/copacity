@@ -5,7 +5,6 @@
 #include "game/components/Animation.h"
 #include "game/components/SpriteSheet.h"
 
-#include <SDL3/SDL.h>
 #include <iostream>
 
 struct Assets;

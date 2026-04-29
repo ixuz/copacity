@@ -4,6 +4,12 @@
 #include <format>
 #include <iostream>
 
+void TextureDeleter::operator()(SDL_Texture *texture) const noexcept {
+  if (texture) {
+    SDL_DestroyTexture(texture);
+  }
+}
+
 struct SDLSurfaceDeleter {
   void operator()(SDL_Surface *surface) const noexcept {
     if (surface)

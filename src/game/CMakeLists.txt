@@ -1,4 +1,7 @@
 add_library(game
+    systems/InputSystem.cpp
+    systems/RenderSystem.cpp
+    systems/RenderTileMapSystem.cpp
     Game.cpp
     Assets.cpp
 )

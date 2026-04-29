@@ -2,16 +2,16 @@
 
 #include "core/Types.h"
 
-#include <SDL3/SDL.h>
 #include <cstdint>
 #include <memory>
 #include <string_view>
 #include <unordered_map>
 
+struct SDL_Renderer;
+struct SDL_Texture;
+
 struct TextureDeleter {
-  void operator()(SDL_Texture *texture) const noexcept {
-    SDL_DestroyTexture(texture);
-  }
+  void operator()(SDL_Texture *texture) const noexcept;
 };
 
 using Texture = std::unique_ptr<SDL_Texture, TextureDeleter>;

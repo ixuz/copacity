@@ -1,4 +1,6 @@
 add_library(core
+    gfx/Init.cpp
+    gfx/Context.cpp
     Foo.cpp
     Bar.cpp
 )

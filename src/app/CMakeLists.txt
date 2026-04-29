@@ -13,7 +13,6 @@ add_custom_command(TARGET app POST_BUILD
 target_link_libraries(app PRIVATE
     core
     game
-    sdl::sdl
 )
 
 target_link_options(app PRIVATE

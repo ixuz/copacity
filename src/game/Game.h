@@ -20,8 +20,8 @@ public:
   void run();
 
 private:
-  sdl::Init init;
-  sdl::Context context;
+  gfx::Init init;
+  gfx::Context context;
   Assets assets;
   ecs::Registry registry;
   ecs::Systems logicSystems;

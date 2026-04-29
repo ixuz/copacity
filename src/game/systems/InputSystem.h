@@ -4,37 +4,8 @@
 #include "core/ecs/Systems.h"
 #include "game/components/Input.h"
 
-#include <SDL3/SDL.h>
-
 class InputSystem : public ecs::System {
 public:
-  void fixedUpdate(ecs::Registry &reg, std::chrono::duration<float>) override {
-    SDL_Event event;
-
-    bool quit = false;
-
-    while (SDL_PollEvent(&event)) {
-      if (event.type == SDL_EVENT_QUIT) {
-        quit = true;
-      }
-
-      if (event.type == SDL_EVENT_KEY_DOWN) {
-        if (event.key.key == SDLK_ESCAPE) {
-          quit = true;
-        }
-      }
-    }
-
-    const bool *keyboardState = SDL_GetKeyboardState(NULL);
-
-    for (auto [e, input] : reg.view<Input>()) {
-      input.quit = quit;
-      input.left = keyboardState[SDL_SCANCODE_LEFT];
-      input.right = keyboardState[SDL_SCANCODE_RIGHT];
-      input.up = keyboardState[SDL_SCANCODE_UP];
-      input.down = keyboardState[SDL_SCANCODE_DOWN];
-    }
-  }
-
-  void update(ecs::Registry &, std::chrono::duration<float>) override {}
+  void fixedUpdate(ecs::Registry &reg, std::chrono::duration<float>) override;
+  void update(ecs::Registry &, std::chrono::duration<float>) override;
 };
