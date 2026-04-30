@@ -1,9 +1,7 @@
 #include "RenderSpriteSheetSystem.h"
 
-#include "core/gfx/Assets.h"
 #include "core/gfx/DrawCall.h"
 #include "core/gfx/RenderSystem.h"
-#include "core/gfx/Renderer.h"
 #include "game/components/RenderLayer.h"
 #include "game/components/SpriteSheet.h"
 
@@ -14,10 +12,8 @@ struct RenderItem {
   const RenderLayer *renderLayer;
 };
 
-RenderSpriteSheetSystem::RenderSpriteSheetSystem(gfx::RenderQueue &renderQueue,
-                                                 gfx::Renderer &gfxRenderer,
-                                                 gfx::Assets &assets)
-    : renderQueue(renderQueue), gfxRenderer(gfxRenderer), assets(assets) {}
+RenderSpriteSheetSystem::RenderSpriteSheetSystem(gfx::RenderQueue &renderQueue)
+    : renderQueue(renderQueue) {}
 
 void RenderSpriteSheetSystem::fixedUpdate(ecs::Registry &,
                                           std::chrono::duration<float>) {}
@@ -60,11 +56,6 @@ void RenderSpriteSheetSystem::update(ecs::Registry &reg,
     dstRect.h = static_cast<float>(spriteHeight);
 
     core::TextureId textureId = renderItem.spriteSheet->textureId;
-    auto texture = assets.getTexture(textureId);
-    if (!texture) {
-      throw std::runtime_error(std::format(
-          "Failed to find texture in assets with textureId: {}", textureId));
-    }
 
     renderQueue.submit(
         gfx::DrawCall{.textureId{textureId}, .src{srcRect}, .dst{dstRect}});

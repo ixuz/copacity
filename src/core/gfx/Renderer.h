@@ -1,6 +1,7 @@
 #pragma once
 
-#include "DrawCall.h"
+#include "core/gfx/DrawCall.h"
+#include "core/gfx/ImageData.h"
 
 namespace gfx {
 
@@ -13,8 +14,8 @@ public:
   virtual void beginFrame() = 0;
   virtual void draw(const DrawCall &drawCall) = 0;
   virtual void endFrame() = 0;
-  virtual void *get() = 0;
-  virtual Assets &getAssets() = 0;
+
+  virtual core::TextureId loadTexture(ImageData &imageData) = 0;
 };
 
 } // namespace gfx

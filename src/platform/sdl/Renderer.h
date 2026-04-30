@@ -1,33 +1,36 @@
 #pragma once
 
 #include "core/gfx/Renderer.h"
-#include "core/gfx/Window.h"
 
-namespace gfx {
-class Assets;
-} // namespace gfx
+#include <unordered_map>
 
 struct SDL_Renderer;
+struct SDL_Texture;
+
+namespace gfx {
+struct ImageData;
+}
 
 namespace platform {
 namespace sdl {
 
+class Window;
+
 class Renderer : public gfx::Renderer {
 public:
-  Renderer(gfx::Window &window);
+  Renderer(Window &window, int logicalWidth, int logicalHeight);
   ~Renderer() override;
 
   void beginFrame() override;
-
   void draw(const gfx::DrawCall &dc) override;
-
   void endFrame() override;
-  void *get() override;
-  virtual gfx::Assets &getAssets() override;
+  SDL_Renderer *getSdlRenderer() const;
+  core::TextureId loadTexture(gfx::ImageData &imageData) override;
 
 private:
   SDL_Renderer *renderer;
-  gfx::Assets *assets;
+  core::TextureId nextTextureId = 1;
+  std::unordered_map<core::TextureId, SDL_Texture *> textures;
 };
 
 } // namespace sdl

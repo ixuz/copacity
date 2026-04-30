@@ -5,10 +5,6 @@
 #include "game/components/Animation.h"
 #include "game/components/SpriteSheet.h"
 
-#include <iostream>
-
-struct Assets;
-
 class AnimationSystem : public ecs::System {
 public:
   void fixedUpdate(ecs::Registry &, std::chrono::duration<float>) override {}

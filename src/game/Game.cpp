@@ -1,5 +1,6 @@
 #include "Game.h"
 
+#include "core/gfx/Assets.h"
 #include "core/gfx/RenderSystem.h"
 #include "core/gfx/Renderer.h"
 #include "core/input/Input.h"
@@ -24,22 +25,23 @@
 #include <iostream>
 
 Game::Game(gfx::Renderer &renderer, gfx::RenderSystem &renderSystem,
-           gfx::RenderQueue &renderQueue, input::Input &input,
-           float ticksPerSecond)
+           gfx::RenderQueue &renderQueue, gfx::Assets &assets,
+           input::Input &input, float ticksPerSecond)
     : renderer(renderer), renderSystem(renderSystem), renderQueue(renderQueue),
-      assets(renderer.getAssets()), input(input),
-      fixedStep(1.0f / ticksPerSecond) {
+      assets(assets), input(input), fixedStep(1.0f / ticksPerSecond) {
 
-  auto playerTextureId = assets.loadTexture("assets/player.png");
-  auto pathTextureId = assets.loadTexture("assets/path.png");
+  auto playerImageData = assets.loadImage("assets/player.png");
+  auto pathImageData = assets.loadImage("assets/path.png");
+
+  auto playerTextureId = renderer.loadTexture(playerImageData);
+  auto pathTextureId = renderer.loadTexture(pathImageData);
 
   logicSystems.add<PlayerControlSystem>(input);
   logicSystems.add<MovementSystem>();
 
   renderSystems.add<AnimationSystem>();
-  renderSystems.add<RenderTileMapSystem>(renderQueue, assets);
-  renderSystems.add<RenderSpriteSheetSystem>(
-      renderQueue, renderSystem.getRenderer(), assets);
+  renderSystems.add<RenderTileMapSystem>(renderQueue);
+  renderSystems.add<RenderSpriteSheetSystem>(renderQueue);
   renderSystems.add<PrintFpsSystem>();
 
   auto playerEntity = registry.create();

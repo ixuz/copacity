@@ -16,7 +16,7 @@ public:
 
   int getWidth() override;
   int getHeight() override;
-  void *get() override;
+  SDL_Window *getSdlWindow() const;
 
 private:
   SDL_Window *window;

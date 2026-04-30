@@ -19,7 +19,7 @@ int Window::getWidth() { return width; }
 
 int Window::getHeight() { return height; }
 
-void *Window::get() { return window; }
+SDL_Window *Window::getSdlWindow() const { return window; }
 
 } // namespace sdl
 } // namespace platform

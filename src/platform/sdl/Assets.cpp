@@ -1,61 +1,48 @@
 #include "Assets.h"
 
 #include <SDL3/SDL.h>
+#include <cstring>
 #include <format>
 #include <stdexcept>
 
 namespace platform {
 namespace sdl {
 
-Assets::Assets(SDL_Renderer &renderer) noexcept : renderer(renderer) {}
+gfx::ImageData Assets::loadImage(std::string_view path) {
+  std::string pathStr(path);
 
-core::TextureId Assets::loadTexture(std::string_view path) {
-  using Surface = std::unique_ptr<SDL_Surface, SDLSurfaceDeleter>;
+  SDL_Surface *surface = SDL_LoadPNG(pathStr.c_str());
 
-  Surface surface(SDL_LoadPNG(std::string(path).c_str()));
   if (!surface) {
     throw std::runtime_error(
         std::format("SDL_LoadPNG failed: {}", SDL_GetError()));
   }
 
-  SDL_Texture *texture = SDL_CreateTextureFromSurface(&renderer, surface.get());
-
-  if (!texture) {
+  SDL_Surface *converted = SDL_ConvertSurface(surface, SDL_PIXELFORMAT_RGBA32);
+  if (!converted) {
     throw std::runtime_error(
-        std::format("SDL_CreateTextureFromSurface failed: {}", SDL_GetError()));
+        std::format("SDL_ConvertSurface failed: {}", SDL_GetError()));
+  }
+  SDL_DestroySurface(surface);
+
+  gfx::ImageData imageData;
+  imageData.width = converted->w;
+  imageData.height = converted->h;
+  imageData.channels = 4;
+
+  imageData.pixels.resize(converted->w * converted->h * 4);
+
+  uint8_t *dst = imageData.pixels.data();
+  uint8_t *src = static_cast<uint8_t *>(converted->pixels);
+
+  for (int y = 0; y < converted->h; y++) {
+    std::memcpy(dst + y * converted->w * 4, src + y * converted->pitch,
+                converted->w * 4);
   }
 
-  if (!SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST)) {
-    throw std::runtime_error(
-        std::format("SDL_SetTextureScaleMode failed: {}", SDL_GetError()));
-  }
+  SDL_DestroySurface(converted);
 
-  core::TextureId textureId = nextTextureId++;
-
-  textures.emplace(textureId, Texture{texture});
-
-  return textureId;
-}
-
-void *Assets::getTexture(core::TextureId textureId) const noexcept {
-  auto it = textures.find(textureId);
-  if (it != textures.end()) {
-    return it->second.get();
-  }
-  return nullptr;
-}
-
-void Assets::SDLSurfaceDeleter::operator()(
-    SDL_Surface *surface) const noexcept {
-  if (surface) {
-    SDL_DestroySurface(surface);
-  }
-}
-
-void Assets::TextureDeleter::operator()(SDL_Texture *texture) const noexcept {
-  if (texture) {
-    SDL_DestroyTexture(texture);
-  }
+  return imageData;
 }
 
 } // namespace sdl

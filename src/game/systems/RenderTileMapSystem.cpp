@@ -1,12 +1,13 @@
 #include "RenderTileMapSystem.h"
 
-#include "core/gfx/Assets.h"
 #include "core/gfx/DrawCall.h"
 #include "core/gfx/RenderSystem.h"
 
-RenderTileMapSystem::RenderTileMapSystem(gfx::RenderQueue &renderQueue,
-                                         gfx::Assets &assets)
-    : renderQueue(renderQueue), assets(assets) {}
+#include "game/components/SpriteSheet.h"
+#include "game/components/TileMap.h"
+
+RenderTileMapSystem::RenderTileMapSystem(gfx::RenderQueue &renderQueue)
+    : renderQueue(renderQueue) {}
 
 void RenderTileMapSystem::fixedUpdate(ecs::Registry &,
                                       std::chrono::duration<float>) {}
@@ -37,12 +38,6 @@ void RenderTileMapSystem::update(ecs::Registry &reg,
         dstRect.h = static_cast<float>(spriteWidth);
 
         core::TextureId textureId = spriteSheet.textureId;
-        auto texture = assets.getTexture(textureId);
-        if (!texture) {
-          throw std::runtime_error(
-              std::format("Failed to find texture in assets with textureId: {}",
-                          textureId));
-        }
 
         renderQueue.submit(
             gfx::DrawCall{.textureId{textureId}, .src{srcRect}, .dst{dstRect}});

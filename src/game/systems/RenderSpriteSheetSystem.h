@@ -14,21 +14,15 @@
 struct RenderItem;
 
 namespace gfx {
-struct Assets;
-class Renderer;
 class RenderQueue;
 } // namespace gfx
 
 class RenderSpriteSheetSystem : public ecs::System {
 public:
-  explicit RenderSpriteSheetSystem(gfx::RenderQueue &renderQueue,
-                                   gfx::Renderer &gfxRenderer,
-                                   gfx::Assets &assets);
+  explicit RenderSpriteSheetSystem(gfx::RenderQueue &renderQueue);
   void fixedUpdate(ecs::Registry &, std::chrono::duration<float>) override;
   void update(ecs::Registry &reg, std::chrono::duration<float>) override;
 
 private:
   gfx::RenderQueue &renderQueue;
-  gfx::Renderer &gfxRenderer;
-  gfx::Assets &assets;
 };

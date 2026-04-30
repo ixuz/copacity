@@ -21,6 +21,7 @@ private:
 class RenderSystem {
 public:
   RenderSystem(Renderer &renderer);
+  virtual ~RenderSystem() = default;
   void render(const RenderQueue &queue);
   Renderer &getRenderer();
 

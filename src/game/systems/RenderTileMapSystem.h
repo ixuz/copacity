@@ -2,22 +2,18 @@
 
 #include "core/ecs/Registry.h"
 #include "core/ecs/Systems.h"
-#include "game/components/SpriteSheet.h"
-#include "game/components/TileMap.h"
 
 #include <chrono>
 #include <format>
 #include <stdexcept>
 
 namespace gfx {
-struct Assets;
 class RenderQueue;
 } // namespace gfx
 
 class RenderTileMapSystem : public ecs::System {
 public:
-  explicit RenderTileMapSystem(gfx::RenderQueue &renderQueue,
-                               gfx::Assets &assets);
+  explicit RenderTileMapSystem(gfx::RenderQueue &renderQueue);
 
   void fixedUpdate(ecs::Registry &, std::chrono::duration<float>) override;
 
@@ -25,5 +21,4 @@ public:
 
 private:
   gfx::RenderQueue &renderQueue;
-  gfx::Assets &assets;
 };

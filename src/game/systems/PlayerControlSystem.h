@@ -7,8 +7,6 @@
 #include "game/components/Position.h"
 #include "game/components/Velocity.h"
 
-#include <iostream>
-
 class PlayerControlSystem : public ecs::System {
 public:
   explicit PlayerControlSystem(input::Input &input) : input(input) {}
