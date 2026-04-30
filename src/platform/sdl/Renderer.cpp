@@ -67,8 +67,7 @@ SDL_Renderer *Renderer::getSdlRenderer() const { return renderer; }
 core::TextureId Renderer::loadTexture(gfx::ImageData &imageData) {
   SDL_Surface *surface = SDL_CreateSurfaceFrom(
       imageData.width, imageData.height, SDL_PIXELFORMAT_RGBA32,
-      const_cast<uint8_t *>(imageData.pixels.data()),
-      imageData.width * imageData.channels);
+      imageData.pixels.data(), imageData.width * imageData.channels);
 
   if (!surface) {
     throw std::runtime_error(

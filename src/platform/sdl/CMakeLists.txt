@@ -3,7 +3,6 @@ find_package(SDL3 REQUIRED)
 add_library(platform_sdl
     Init.cpp
     Window.cpp
-    Assets.cpp
     Renderer.cpp
     Input.cpp
 )

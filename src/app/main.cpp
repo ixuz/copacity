@@ -1,8 +1,8 @@
 #include "game/Game.h"
 
+#include "core/gfx/Assets.h"
 #include "core/gfx/RenderSystem.h"
 
-#include "platform/sdl/Assets.h"
 #include "platform/sdl/Init.h"
 #include "platform/sdl/Input.h"
 #include "platform/sdl/Renderer.h"
@@ -12,9 +12,9 @@ int main() {
   platform::sdl::Init init;
   platform::sdl::Window window("Copacity", 640, 480);
   platform::sdl::Renderer renderer(window, 160, 120);
-  platform::sdl::Assets assets;
   platform::sdl::Input input;
 
+  gfx::Assets assets;
   gfx::RenderQueue renderQueue;
   gfx::RenderSystem renderSystem(renderer);
 
