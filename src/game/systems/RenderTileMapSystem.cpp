@@ -1,11 +1,12 @@
 #include "RenderTileMapSystem.h"
 
-#include "game/Assets.h"
+#include "core/gfx/Assets.h"
+#include "core/gfx/DrawCall.h"
+#include "core/gfx/RenderSystem.h"
 
-#include <SDL3/SDL.h>
-
-RenderTileMapSystem::RenderTileMapSystem(SDL_Renderer *renderer, Assets &assets)
-    : renderer(renderer), assets(assets) {}
+RenderTileMapSystem::RenderTileMapSystem(gfx::RenderQueue &renderQueue,
+                                         gfx::Assets &assets)
+    : renderQueue(renderQueue), assets(assets) {}
 
 void RenderTileMapSystem::fixedUpdate(ecs::Registry &,
                                       std::chrono::duration<float>) {}
@@ -21,21 +22,21 @@ void RenderTileMapSystem::update(ecs::Registry &reg,
         int spriteWidth = spriteSheet.width / spriteSheet.cols;
         int spriteHeight = spriteSheet.height / spriteSheet.rows;
 
-        SDL_FRect srcrect;
-        srcrect.x = static_cast<float>((tile.spriteId % spriteSheet.cols) *
+        gfx::Rect srcRect;
+        srcRect.x = static_cast<float>((tile.spriteId % spriteSheet.cols) *
                                        spriteWidth);
-        srcrect.y = static_cast<float>((tile.spriteId / spriteSheet.cols) *
+        srcRect.y = static_cast<float>((tile.spriteId / spriteSheet.cols) *
                                        spriteHeight);
-        srcrect.w = static_cast<float>(spriteWidth);
-        srcrect.h = static_cast<float>(spriteWidth);
+        srcRect.w = static_cast<float>(spriteWidth);
+        srcRect.h = static_cast<float>(spriteWidth);
 
-        SDL_FRect dstrect;
-        dstrect.x = static_cast<float>(x * spriteWidth);
-        dstrect.y = static_cast<float>(y * spriteWidth);
-        dstrect.w = static_cast<float>(spriteWidth);
-        dstrect.h = static_cast<float>(spriteWidth);
+        gfx::Rect dstRect;
+        dstRect.x = static_cast<float>(x * spriteWidth);
+        dstRect.y = static_cast<float>(y * spriteWidth);
+        dstRect.w = static_cast<float>(spriteWidth);
+        dstRect.h = static_cast<float>(spriteWidth);
 
-        int textureId = spriteSheet.textureId;
+        core::TextureId textureId = spriteSheet.textureId;
         auto texture = assets.getTexture(textureId);
         if (!texture) {
           throw std::runtime_error(
@@ -43,7 +44,8 @@ void RenderTileMapSystem::update(ecs::Registry &reg,
                           textureId));
         }
 
-        SDL_RenderTexture(renderer, texture, &srcrect, &dstrect);
+        renderQueue.submit(
+            gfx::DrawCall{.textureId{textureId}, .src{srcRect}, .dst{dstRect}});
       }
     }
   }

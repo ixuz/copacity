@@ -2,7 +2,7 @@
 
 #include "core/ecs/Registry.h"
 #include "core/ecs/Systems.h"
-#include "game/components/Input.h"
+#include "core/input/Input.h"
 #include "game/components/Player.h"
 #include "game/components/Position.h"
 #include "game/components/Velocity.h"
@@ -11,14 +11,17 @@
 
 class PlayerControlSystem : public ecs::System {
 public:
-  void fixedUpdate(ecs::Registry &reg, std::chrono::duration<float>) override {
-    for (auto [e, player, input, position, velocity] :
-         reg.view<Player, Input, Position, Velocity>()) {
+  explicit PlayerControlSystem(input::Input &input) : input(input) {}
 
-      int right = input.right ? 1 : 0;
-      int left = input.left ? 1 : 0;
-      int up = input.up ? 1 : 0;
-      int down = input.down ? 1 : 0;
+  void fixedUpdate(ecs::Registry &reg, std::chrono::duration<float>) override {
+    for (auto [e, player, position, velocity] :
+         reg.view<Player, Position, Velocity>()) {
+
+      auto keyboard = input.getKeyboard();
+      int right = keyboard.right ? 1 : 0;
+      int left = keyboard.left ? 1 : 0;
+      int up = keyboard.up ? 1 : 0;
+      int down = keyboard.down ? 1 : 0;
 
       int xDirection = (right - left);
       int yDirection = (down - up);
@@ -73,4 +76,7 @@ public:
   }
 
   void update(ecs::Registry &, std::chrono::duration<float>) override {}
+
+private:
+  input::Input &input;
 };

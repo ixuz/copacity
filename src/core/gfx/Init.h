@@ -4,8 +4,7 @@ namespace gfx {
 
 class Init {
 public:
-  Init();
-  ~Init();
+  virtual ~Init() = default;
 };
 
 } // namespace gfx

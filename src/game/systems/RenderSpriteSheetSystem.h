@@ -11,17 +11,24 @@
 #include <stdexcept>
 #include <vector>
 
-struct SDL_Renderer;
-struct Assets;
 struct RenderItem;
 
-class RenderSystem : public ecs::System {
+namespace gfx {
+struct Assets;
+class Renderer;
+class RenderQueue;
+} // namespace gfx
+
+class RenderSpriteSheetSystem : public ecs::System {
 public:
-  explicit RenderSystem(SDL_Renderer *renderer, Assets &assets);
+  explicit RenderSpriteSheetSystem(gfx::RenderQueue &renderQueue,
+                                   gfx::Renderer &gfxRenderer,
+                                   gfx::Assets &assets);
   void fixedUpdate(ecs::Registry &, std::chrono::duration<float>) override;
   void update(ecs::Registry &reg, std::chrono::duration<float>) override;
 
 private:
-  SDL_Renderer *renderer;
-  Assets &assets;
+  gfx::RenderQueue &renderQueue;
+  gfx::Renderer &gfxRenderer;
+  gfx::Assets &assets;
 };

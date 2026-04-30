@@ -2,20 +2,10 @@
 
 #include <SDL3/SDL.h>
 #include <format>
-#include <iostream>
+#include <stdexcept>
 
-void TextureDeleter::operator()(SDL_Texture *texture) const noexcept {
-  if (texture) {
-    SDL_DestroyTexture(texture);
-  }
-}
-
-struct SDLSurfaceDeleter {
-  void operator()(SDL_Surface *surface) const noexcept {
-    if (surface)
-      SDL_DestroySurface(surface);
-  }
-};
+namespace platform {
+namespace sdl {
 
 Assets::Assets(SDL_Renderer &renderer) noexcept : renderer(renderer) {}
 
@@ -47,10 +37,26 @@ core::TextureId Assets::loadTexture(std::string_view path) {
   return textureId;
 }
 
-SDL_Texture *Assets::getTexture(core::TextureId textureId) const noexcept {
+void *Assets::getTexture(core::TextureId textureId) const noexcept {
   auto it = textures.find(textureId);
   if (it != textures.end()) {
     return it->second.get();
   }
   return nullptr;
 }
+
+void Assets::SDLSurfaceDeleter::operator()(
+    SDL_Surface *surface) const noexcept {
+  if (surface) {
+    SDL_DestroySurface(surface);
+  }
+}
+
+void Assets::TextureDeleter::operator()(SDL_Texture *texture) const noexcept {
+  if (texture) {
+    SDL_DestroyTexture(texture);
+  }
+}
+
+} // namespace sdl
+} // namespace platform

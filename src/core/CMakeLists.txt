@@ -1,12 +1,9 @@
+find_package(SDL3 REQUIRED)
+
 add_library(core
-    gfx/Init.cpp
-    gfx/Context.cpp
+    gfx/RenderSystem.cpp
     Foo.cpp
     Bar.cpp
-)
-
-target_link_libraries(core PRIVATE
-    sdl::sdl
 )
 
 target_compile_options(core PRIVATE
@@ -17,4 +14,4 @@ target_compile_options(core PRIVATE
     -Werror
 )
 
-target_include_directories(core PUBLIC src)
+target_include_directories(core PUBLIC ${CMAKE_SOURCE_DIR}/src)

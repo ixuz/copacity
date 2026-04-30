@@ -1,17 +1,27 @@
 #pragma once
 
-#include "Assets.h"
-#include "core/gfx/Context.h"
-#include "core/gfx/Init.h"
-
 #include "core/ecs/Registry.h"
 #include "core/ecs/Systems.h"
+#include "core/gfx/Assets.h"
+#include "core/gfx/Init.h"
 
 #include <chrono>
 
+namespace gfx {
+class Renderer;
+class RenderSystem;
+class RenderQueue;
+} // namespace gfx
+
+namespace input {
+class Input;
+}
+
 class Game {
 public:
-  explicit Game(float ticksPerSecond);
+  explicit Game(gfx::Renderer &renderer, gfx::RenderSystem &renderSystem,
+                gfx::RenderQueue &renderQueue, input::Input &input,
+                float ticksPerSecond);
   Game(const Game &) = delete;
   Game &operator=(const Game &) = delete;
   Game(Game &&) = default;
@@ -20,9 +30,11 @@ public:
   void run();
 
 private:
-  gfx::Init init;
-  gfx::Context context;
-  Assets assets;
+  gfx::Renderer &renderer;
+  gfx::RenderSystem &renderSystem;
+  gfx::RenderQueue &renderQueue;
+  gfx::Assets &assets;
+  input::Input &input;
   ecs::Registry registry;
   ecs::Systems logicSystems;
   ecs::Systems renderSystems;

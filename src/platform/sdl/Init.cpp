@@ -4,7 +4,8 @@
 #include <format>
 #include <stdexcept>
 
-namespace gfx {
+namespace platform {
+namespace sdl {
 
 Init::Init() {
   if (!SDL_Init(SDL_INIT_VIDEO)) {
@@ -15,4 +16,5 @@ Init::Init() {
 
 Init::~Init() { SDL_Quit(); }
 
-} // namespace gfx
+} // namespace sdl
+} // namespace platform

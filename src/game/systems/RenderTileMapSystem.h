@@ -9,18 +9,21 @@
 #include <format>
 #include <stdexcept>
 
-struct SDL_Renderer;
+namespace gfx {
 struct Assets;
+class RenderQueue;
+} // namespace gfx
 
 class RenderTileMapSystem : public ecs::System {
 public:
-  explicit RenderTileMapSystem(SDL_Renderer *renderer, Assets &assets);
+  explicit RenderTileMapSystem(gfx::RenderQueue &renderQueue,
+                               gfx::Assets &assets);
 
   void fixedUpdate(ecs::Registry &, std::chrono::duration<float>) override;
 
   void update(ecs::Registry &reg, std::chrono::duration<float>) override;
 
 private:
-  SDL_Renderer *renderer;
-  Assets &assets;
+  gfx::RenderQueue &renderQueue;
+  gfx::Assets &assets;
 };

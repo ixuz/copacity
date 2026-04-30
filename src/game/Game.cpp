@@ -1,5 +1,9 @@
 #include "Game.h"
 
+#include "core/gfx/RenderSystem.h"
+#include "core/gfx/Renderer.h"
+#include "core/input/Input.h"
+
 #include "game/components/Animation.h"
 #include "game/components/Map.h"
 #include "game/components/Player.h"
@@ -9,37 +13,37 @@
 #include "game/components/TileMap.h"
 #include "game/components/Velocity.h"
 #include "game/systems/AnimationSystem.h"
-#include "game/systems/InputSystem.h"
 #include "game/systems/MovementSystem.h"
 #include "game/systems/PlayerControlSystem.h"
 #include "game/systems/PrintFpsSystem.h"
-#include "game/systems/RenderSystem.h"
+#include "game/systems/RenderSpriteSheetSystem.h"
 #include "game/systems/RenderTileMapSystem.h"
 
-#include <SDL3/SDL.h>
 #include <chrono>
 #include <format>
 #include <iostream>
 
-Game::Game(float ticksPerSecond)
-    : context("Copacity", 640, 480, 4), assets(*context.getRenderer()),
+Game::Game(gfx::Renderer &renderer, gfx::RenderSystem &renderSystem,
+           gfx::RenderQueue &renderQueue, input::Input &input,
+           float ticksPerSecond)
+    : renderer(renderer), renderSystem(renderSystem), renderQueue(renderQueue),
+      assets(renderer.getAssets()), input(input),
       fixedStep(1.0f / ticksPerSecond) {
 
   auto playerTextureId = assets.loadTexture("assets/player.png");
   auto pathTextureId = assets.loadTexture("assets/path.png");
 
-  logicSystems.add<InputSystem>();
-  logicSystems.add<PlayerControlSystem>();
+  logicSystems.add<PlayerControlSystem>(input);
   logicSystems.add<MovementSystem>();
 
   renderSystems.add<AnimationSystem>();
-  renderSystems.add<RenderTileMapSystem>(context.getRenderer(), assets);
-  renderSystems.add<RenderSystem>(context.getRenderer(), assets);
+  renderSystems.add<RenderTileMapSystem>(renderQueue, assets);
+  renderSystems.add<RenderSpriteSheetSystem>(
+      renderQueue, renderSystem.getRenderer(), assets);
   renderSystems.add<PrintFpsSystem>();
 
   auto playerEntity = registry.create();
   registry.add(playerEntity, Player{});
-  registry.add(playerEntity, Input{});
   registry.add(playerEntity, SpriteSheet{.textureId{playerTextureId},
                                          .spriteId{0},
                                          .width{32},
@@ -81,8 +85,6 @@ Game::Game(float ticksPerSecond)
 
 // TODO: Decouple simulation from render thread
 void Game::run() {
-  auto *input = registry.first<Input>();
-
   using clock = std::chrono::high_resolution_clock;
   auto lastTime = clock::now();
 
@@ -91,7 +93,11 @@ void Game::run() {
 
   bool running = true;
   while (running) {
-    if (input->quit)
+    auto keyboard = input.getKeyboard();
+
+    renderQueue.clear();
+
+    if (keyboard.escape)
       running = false;
 
     auto now = clock::now();
@@ -106,11 +112,8 @@ void Game::run() {
       accumulator -= fixedStep;
     }
 
-    SDL_SetRenderDrawColor(context.getRenderer(), 0x00, 0x00, 0x00, 0x00);
-    SDL_RenderClear(context.getRenderer());
-
     renderSystems.update(registry, dt);
 
-    SDL_RenderPresent(context.getRenderer());
+    renderSystem.render(renderQueue);
   }
 }

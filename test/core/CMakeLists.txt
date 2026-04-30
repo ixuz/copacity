@@ -1,3 +1,4 @@
+find_package(SDL3 REQUIRED)
 find_package(GTest CONFIG REQUIRED)
 
 add_executable(core_tests
@@ -12,7 +13,6 @@ target_include_directories(core_tests PUBLIC
 target_link_libraries(core_tests PRIVATE
     core
     game
-    sdl::sdl
     gtest::gtest
     GTest::gtest_main
     GTest::gmock
