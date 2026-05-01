@@ -3,6 +3,7 @@
 #include "core/gfx/DrawCall.h"
 #include "core/gfx/RenderSystem.h"
 
+#include "game/components/RenderLayer.h"
 #include "game/components/SpriteSheet.h"
 #include "game/components/TileMap.h"
 
@@ -14,7 +15,8 @@ void RenderTileMapSystem::fixedUpdate(ecs::Registry &,
 
 void RenderTileMapSystem::update(ecs::Registry &reg,
                                  std::chrono::duration<float>) {
-  for (auto [e, tileMap, spriteSheet] : reg.view<TileMap, SpriteSheet>()) {
+  for (auto [e, tileMap, spriteSheet, renderLayer] :
+       reg.view<TileMap, SpriteSheet, RenderLayer>()) {
     for (int y = 0; y < tileMap.height; y++) {
       for (int x = 0; x < tileMap.width; x++) {
         int tileIndex = y * tileMap.width + x;
@@ -39,8 +41,10 @@ void RenderTileMapSystem::update(ecs::Registry &reg,
 
         core::TextureId textureId = spriteSheet.textureId;
 
-        renderQueue.submit(
-            gfx::DrawCall{.textureId{textureId}, .src{srcRect}, .dst{dstRect}});
+        renderQueue.submit(gfx::DrawCall{.textureId{textureId},
+                                         .src{srcRect},
+                                         .dst{dstRect},
+                                         .renderLayer{renderLayer.z}});
       }
     }
   }

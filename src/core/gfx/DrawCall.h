@@ -12,6 +12,7 @@ struct DrawCall {
   core::TextureId textureId;
   Rect src;
   Rect dst;
+  int renderLayer;
 };
 
 } // namespace gfx

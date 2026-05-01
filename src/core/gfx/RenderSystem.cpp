@@ -2,6 +2,7 @@
 
 #include "Renderer.h"
 
+#include <algorithm>
 #include <format>
 #include <iostream>
 
@@ -18,9 +19,17 @@ const std::vector<DrawCall> &RenderQueue::getDrawCalls() const {
 RenderSystem::RenderSystem(Renderer &renderer) : renderer(renderer) {}
 
 void RenderSystem::render(const RenderQueue &queue) {
+
+  auto drawCalls = queue.getDrawCalls();
+
+  std::sort(drawCalls.begin(), drawCalls.end(),
+            [](const DrawCall &a, const DrawCall &b) {
+              return a.renderLayer < b.renderLayer;
+            });
+
   renderer.beginFrame();
 
-  for (const auto &drawCall : queue.getDrawCalls()) {
+  for (const auto &drawCall : drawCalls) {
     renderer.draw(drawCall);
   }
 

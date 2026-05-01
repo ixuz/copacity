@@ -2,7 +2,7 @@ find_package(stb REQUIRED)
 find_package(SDL3 REQUIRED)
 
 add_library(core
-    gfx/Assets
+    gfx/Assets.cpp
     gfx/RenderSystem.cpp
     Foo.cpp
     Bar.cpp

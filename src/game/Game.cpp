@@ -58,7 +58,7 @@ Game::Game(gfx::Renderer &renderer, gfx::RenderSystem &renderSystem,
       playerEntity,
       Animation{.frames{0, 1, 2, 3},
                 .frameTime{std::chrono::duration<float>(1.0f / 8.0f)}});
-  registry.add(playerEntity, RenderLayer{0});
+  registry.add(playerEntity, RenderLayer{2});
 
   auto mapEntity = registry.create();
   registry.add(mapEntity, Map{});
@@ -83,6 +83,7 @@ Game::Game(gfx::Renderer &renderer, gfx::RenderSystem &renderSystem,
                   {15, Direction::Left | Direction::Right},
                   {4, Direction::Left},
               }});
+  registry.add(mapEntity, RenderLayer{1});
 }
 
 // TODO: Decouple simulation from render thread
