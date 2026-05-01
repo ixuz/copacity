@@ -8,8 +8,8 @@
 
 namespace gfx {
 class Renderer;
-class RenderSystem;
-class RenderQueue;
+class RenderPipeline;
+class DrawCallQueue;
 class Assets;
 } // namespace gfx
 
@@ -19,8 +19,8 @@ class Input;
 
 class Game {
 public:
-  explicit Game(gfx::Renderer &renderer, gfx::RenderSystem &renderSystem,
-                gfx::RenderQueue &renderQueue, gfx::Assets &assets,
+  explicit Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
+                gfx::DrawCallQueue &drawCallQueue, gfx::Assets &assets,
                 input::Input &input, float ticksPerSecond);
   Game(const Game &) = delete;
   Game &operator=(const Game &) = delete;
@@ -31,8 +31,8 @@ public:
 
 private:
   gfx::Renderer &renderer;
-  gfx::RenderSystem &renderSystem;
-  gfx::RenderQueue &renderQueue;
+  gfx::RenderPipeline &renderPipeline;
+  gfx::DrawCallQueue &drawCallQueue;
   gfx::Assets &assets;
   input::Input &input;
   ecs::Registry registry;

@@ -1,7 +1,8 @@
 #include "Game.h"
 
 #include "core/gfx/Assets.h"
-#include "core/gfx/RenderSystem.h"
+#include "core/gfx/DrawCallQueue.h"
+#include "core/gfx/RenderPipeline.h"
 #include "core/gfx/Renderer.h"
 #include "core/input/Input.h"
 
@@ -24,11 +25,12 @@
 #include <format>
 #include <iostream>
 
-Game::Game(gfx::Renderer &renderer, gfx::RenderSystem &renderSystem,
-           gfx::RenderQueue &renderQueue, gfx::Assets &assets,
+Game::Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
+           gfx::DrawCallQueue &drawCallQueue, gfx::Assets &assets,
            input::Input &input, float ticksPerSecond)
-    : renderer(renderer), renderSystem(renderSystem), renderQueue(renderQueue),
-      assets(assets), input(input), fixedStep(1.0f / ticksPerSecond) {
+    : renderer(renderer), renderPipeline(renderPipeline),
+      drawCallQueue(drawCallQueue), assets(assets), input(input),
+      fixedStep(1.0f / ticksPerSecond) {
 
   auto playerImageData = assets.loadImage("assets/player.png");
   auto pathImageData = assets.loadImage("assets/path.png");
@@ -40,8 +42,8 @@ Game::Game(gfx::Renderer &renderer, gfx::RenderSystem &renderSystem,
   logicSystems.add<MovementSystem>();
 
   renderSystems.add<AnimationSystem>();
-  renderSystems.add<RenderTileMapSystem>(renderQueue);
-  renderSystems.add<RenderSpriteSheetSystem>(renderQueue);
+  renderSystems.add<RenderTileMapSystem>(drawCallQueue);
+  renderSystems.add<RenderSpriteSheetSystem>(drawCallQueue);
   renderSystems.add<PrintFpsSystem>();
 
   auto playerEntity = registry.create();
@@ -98,7 +100,7 @@ void Game::run() {
   while (running) {
     auto keyboard = input.getKeyboard();
 
-    renderQueue.clear();
+    drawCallQueue.clear();
 
     if (keyboard.escape)
       running = false;
@@ -117,6 +119,6 @@ void Game::run() {
 
     renderSystems.update(registry, dt);
 
-    renderSystem.render(renderQueue);
+    renderPipeline.render(drawCallQueue);
   }
 }

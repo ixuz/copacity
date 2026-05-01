@@ -3,7 +3,8 @@ find_package(SDL3 REQUIRED)
 
 add_library(core
     gfx/Assets.cpp
-    gfx/RenderSystem.cpp
+    gfx/DrawCallQueue.cpp
+    gfx/RenderPipeline.cpp
     Foo.cpp
     Bar.cpp
 )

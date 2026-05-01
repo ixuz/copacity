@@ -1,7 +1,8 @@
 #include "game/Game.h"
 
 #include "core/gfx/Assets.h"
-#include "core/gfx/RenderSystem.h"
+#include "core/gfx/DrawCallQueue.h"
+#include "core/gfx/RenderPipeline.h"
 
 #include "platform/sdl/Init.h"
 #include "platform/sdl/Input.h"
@@ -15,9 +16,9 @@ int main() {
   platform::sdl::Input input;
 
   gfx::Assets assets;
-  gfx::RenderQueue renderQueue;
-  gfx::RenderSystem renderSystem(renderer);
+  gfx::DrawCallQueue drawCallQueue;
+  gfx::RenderPipeline renderPipeline(renderer);
 
-  Game game(renderer, renderSystem, renderQueue, assets, input, 6.0f);
+  Game game(renderer, renderPipeline, drawCallQueue, assets, input, 6.0f);
   game.run();
 }

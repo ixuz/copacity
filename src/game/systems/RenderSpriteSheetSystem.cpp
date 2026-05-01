@@ -1,12 +1,14 @@
 #include "RenderSpriteSheetSystem.h"
 
 #include "core/gfx/DrawCall.h"
-#include "core/gfx/RenderSystem.h"
+#include "core/gfx/DrawCallQueue.h"
+#include "core/gfx/RenderPipeline.h"
 #include "game/components/RenderLayer.h"
 #include "game/components/SpriteSheet.h"
 
-RenderSpriteSheetSystem::RenderSpriteSheetSystem(gfx::RenderQueue &renderQueue)
-    : renderQueue(renderQueue) {}
+RenderSpriteSheetSystem::RenderSpriteSheetSystem(
+    gfx::DrawCallQueue &drawCallQueue)
+    : drawCallQueue(drawCallQueue) {}
 
 void RenderSpriteSheetSystem::fixedUpdate(ecs::Registry &,
                                           std::chrono::duration<float>) {}
@@ -35,9 +37,9 @@ void RenderSpriteSheetSystem::update(ecs::Registry &reg,
 
     core::TextureId textureId = spriteSheet.textureId;
 
-    renderQueue.submit(gfx::DrawCall{.textureId{textureId},
-                                     .src{srcRect},
-                                     .dst{dstRect},
-                                     .renderLayer{renderLayer.z}});
+    drawCallQueue.submit(gfx::DrawCall{.textureId{textureId},
+                                       .src{srcRect},
+                                       .dst{dstRect},
+                                       .renderLayer{renderLayer.z}});
   }
 }

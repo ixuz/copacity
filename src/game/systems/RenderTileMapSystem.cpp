@@ -1,14 +1,14 @@
 #include "RenderTileMapSystem.h"
 
 #include "core/gfx/DrawCall.h"
-#include "core/gfx/RenderSystem.h"
-
+#include "core/gfx/DrawCallQueue.h"
+#include "core/gfx/RenderPipeline.h"
 #include "game/components/RenderLayer.h"
 #include "game/components/SpriteSheet.h"
 #include "game/components/TileMap.h"
 
-RenderTileMapSystem::RenderTileMapSystem(gfx::RenderQueue &renderQueue)
-    : renderQueue(renderQueue) {}
+RenderTileMapSystem::RenderTileMapSystem(gfx::DrawCallQueue &drawCallQueue)
+    : drawCallQueue(drawCallQueue) {}
 
 void RenderTileMapSystem::fixedUpdate(ecs::Registry &,
                                       std::chrono::duration<float>) {}
@@ -41,10 +41,10 @@ void RenderTileMapSystem::update(ecs::Registry &reg,
 
         core::TextureId textureId = spriteSheet.textureId;
 
-        renderQueue.submit(gfx::DrawCall{.textureId{textureId},
-                                         .src{srcRect},
-                                         .dst{dstRect},
-                                         .renderLayer{renderLayer.z}});
+        drawCallQueue.submit(gfx::DrawCall{.textureId{textureId},
+                                           .src{srcRect},
+                                           .dst{dstRect},
+                                           .renderLayer{renderLayer.z}});
       }
     }
   }
