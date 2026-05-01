@@ -2,6 +2,7 @@ find_package(SDL3 REQUIRED)
 find_package(GTest CONFIG REQUIRED)
 
 add_executable(core_tests
+    FixedPointTest.cpp
     FooTest.cpp
     BarTest.cpp
 )
