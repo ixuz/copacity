@@ -72,15 +72,16 @@ Game::Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
 
   auto mapEntity = registry.create();
   registry.add(mapEntity, Map{});
-  registry.add(mapEntity, SpriteSheet{.textureId{pathTextureId},
-                                      .spriteId{0},
-                                      .width{80},
-                                      .height{64},
-                                      .cols{5},
-                                      .rows{4}});
-  registry.add(mapEntity, TileMap{.width = 3,
-                                  .height = 3,
-                                  .tiles = {
+  registry.add(mapEntity,
+               SpriteSheet{.textureId{pathTextureId},
+                           .spriteId{0}, // TODO: Remove this property
+                           .width{80},
+                           .height{64},
+                           .cols{5},
+                           .rows{4}});
+  registry.add(mapEntity, TileMap{.width{3},
+                                  .height{3},
+                                  .tiles{
                                       {5},
                                       {6},
                                       {9},
