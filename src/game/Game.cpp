@@ -38,9 +38,11 @@ Game::Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
       drawCallQueue(drawCallQueue), assets(assets), input(input),
       fixedStep(1.0f / ticksPerSecond) {
 
+  auto terrainImageData = assets.loadImage("assets/terrain.png");
   auto playerImageData = assets.loadImage("assets/player.png");
   auto pathImageData = assets.loadImage("assets/path.png");
 
+  auto terrainTextureId = renderer.loadTexture(terrainImageData);
   auto playerTextureId = renderer.loadTexture(playerImageData);
   auto pathTextureId = renderer.loadTexture(pathImageData);
 
@@ -49,7 +51,7 @@ Game::Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
   logicSystems.add<WalkerSystem>();
 
   renderSystems.add<AnimationSystem>();
-  // renderSystems.add<RenderTileMapSystem>(drawCallQueue);
+  renderSystems.add<RenderTileMapSystem>(drawCallQueue);
   renderSystems.add<RenderSpriteSheetSystem>(drawCallQueue);
   renderSystems.add<RenderNavMapSystem>(drawCallQueue);
   renderSystems.add<PrintFpsSystem>();
@@ -70,54 +72,76 @@ Game::Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
                 .frameTime{std::chrono::duration<float>(1.0f / 8.0f)}});
   registry.add(playerEntity, RenderLayer{2});*/
 
-  auto mapEntity = registry.create();
-  registry.add(mapEntity, Map{});
-  registry.add(mapEntity,
+  auto terrainEntity = registry.create();
+  registry.add(terrainEntity, Map{});
+  registry.add(terrainEntity,
+               SpriteSheet{.textureId{terrainTextureId},
+                           .spriteId{0}, // TODO: Remove this property
+                           .width{32},
+                           .height{32},
+                           .cols{2},
+                           .rows{2}});
+  registry.add(
+      terrainEntity,
+      TileMap{.width{10},
+              .height{8},
+              .tiles{
+                  {0}, {1}, {0}, {1}, {0}, {1}, {0}, {1}, {0}, {1}, {2}, {3},
+                  {2}, {3}, {2}, {3}, {2}, {3}, {2}, {3}, {0}, {1}, {0}, {1},
+                  {0}, {1}, {0}, {1}, {0}, {1}, {2}, {3}, {2}, {3}, {2}, {3},
+                  {2}, {3}, {2}, {3}, {0}, {1}, {0}, {1}, {0}, {1}, {0}, {1},
+                  {0}, {1}, {2}, {3}, {2}, {3}, {2}, {3}, {2}, {3}, {2}, {3},
+                  {0}, {1}, {0}, {1}, {0}, {1}, {0}, {1}, {0}, {1}, {2}, {3},
+                  {2}, {3}, {2}, {3}, {2}, {3}, {2}, {3}, {0}, {1}, {0}, {1},
+                  {0}, {1}, {0}, {1}, {0}, {1}, {2}, {3}, {2}, {3}, {2}, {3},
+                  {2}, {3}, {2}, {3}, {0}, {1}, {0}, {1}, {0}, {1}, {0}, {1},
+                  {0}, {1}, {2}, {3}, {2}, {3}, {2}, {3}, {2}, {3}, {2}, {3},
+                  {0}, {1}, {0}, {1}, {0}, {1}, {0}, {1}, {0}, {1}, {2}, {3},
+                  {2}, {3}, {2}, {3}, {2}, {3}, {2}, {3}, {0}, {1}, {0}, {1},
+                  {0}, {1}, {0}, {1}, {0}, {1}, {2}, {3}, {2}, {3}, {2}, {3},
+                  {2}, {3}, {2}, {3},
+              }});
+  registry.add(terrainEntity, RenderLayer{1});
+
+  auto navMapEntity = registry.create();
+  registry.add(navMapEntity, Map{});
+  registry.add(navMapEntity,
                SpriteSheet{.textureId{pathTextureId},
                            .spriteId{0}, // TODO: Remove this property
                            .width{80},
                            .height{64},
                            .cols{5},
                            .rows{4}});
-  registry.add(mapEntity, TileMap{.width{3},
-                                  .height{3},
-                                  .tiles{
-                                      {5},
-                                      {6},
-                                      {9},
-                                      {7},
-                                      {12},
-                                      {11},
-                                      {10},
-                                      {15},
-                                      {4},
-                                  }});
-  registry.add(mapEntity, NavMap{.width{3},
-                                 .height{3},
-                                 .textureId{pathTextureId},
-                                 .nodes = {
-                                     {true},
-                                     {true},
-                                     {true},
-                                     {true},
-                                     {false},
-                                     {false},
-                                     {true},
-                                     {true},
-                                     {false},
-                                 }});
-  registry.add(mapEntity, RenderLayer{1});
+  registry.add(navMapEntity, NavMap{.width{3},
+                                    .height{3},
+                                    .textureId{pathTextureId},
+                                    .nodes = {
+                                        {true},
+                                        {true},
+                                        {true},
+                                        {true},
+                                        {false},
+                                        {false},
+                                        {true},
+                                        {true},
+                                        {false},
+                                    }});
+  registry.add(navMapEntity, RenderLayer{2});
 
   auto walkerEntity = registry.create();
   registry.add(walkerEntity, Walker{});
-  registry.add(walkerEntity, GridPosition{0, 0});
+  registry.add(walkerEntity, GridPosition{1, 2});
   registry.add(walkerEntity, SpriteSheet{.textureId{playerTextureId},
                                          .spriteId{0},
                                          .width{32},
                                          .height{32},
                                          .cols{2},
                                          .rows{2}});
-  registry.add(walkerEntity, RenderLayer{2});
+  registry.add(
+      walkerEntity,
+      Animation{.frames{0, 1, 2, 3},
+                .frameTime{std::chrono::duration<float>(1.0f / 8.0f)}});
+  registry.add(walkerEntity, RenderLayer{3});
 }
 
 // TODO: Decouple simulation from render thread
@@ -147,6 +171,7 @@ void Game::run() {
     while (accumulator >= fixedStep) {
       logicSystems.fixedUpdate(registry, fixedStep);
       accumulator -= fixedStep;
+      tick++;
     }
 
     renderSystems.update(registry, dt);

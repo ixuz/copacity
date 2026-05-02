@@ -16,7 +16,6 @@ void RenderSpriteSheetSystem::fixedUpdate(ecs::Registry &,
 
 void RenderSpriteSheetSystem::update(ecs::Registry &reg,
                                      std::chrono::duration<float>) {
-  const int PIXELS_PER_UNIT = 16;
   for (auto [e, gridPosition, spriteSheet, renderLayer] :
        reg.view<GridPosition, SpriteSheet, RenderLayer>()) {
 
@@ -32,8 +31,8 @@ void RenderSpriteSheetSystem::update(ecs::Registry &reg,
     srcRect.h = static_cast<float>(spriteHeight);
 
     gfx::Rect dstRect;
-    dstRect.x = static_cast<float>(PIXELS_PER_UNIT * gridPosition.x);
-    dstRect.y = static_cast<float>(PIXELS_PER_UNIT * gridPosition.y);
+    dstRect.x = static_cast<float>(gridPosition.x);
+    dstRect.y = static_cast<float>(gridPosition.y);
     dstRect.w = static_cast<float>(spriteWidth);
     dstRect.h = static_cast<float>(spriteHeight);
 

@@ -11,7 +11,9 @@
 namespace platform {
 namespace sdl {
 
-Renderer::Renderer(Window &window, int logicalWidth, int logicalHeight) {
+Renderer::Renderer(Window &window, int logicalWidth, int logicalHeight,
+                   int pixelsPerUnit)
+    : pixelsPerUnit(pixelsPerUnit) {
   this->renderer = SDL_CreateRenderer(window.getSdlWindow(), nullptr);
 
   if (!SDL_SetRenderLogicalPresentation(renderer, logicalWidth, logicalHeight,
@@ -52,8 +54,8 @@ void Renderer::draw(const gfx::DrawCall &drawCall) {
                        .w{drawCall.src.w},
                        .h{drawCall.src.h}};
 
-  SDL_FRect dstSdlRect{.x{drawCall.dst.x},
-                       .y{drawCall.dst.y},
+  SDL_FRect dstSdlRect{.x{drawCall.dst.x * static_cast<float>(pixelsPerUnit)},
+                       .y{drawCall.dst.y * static_cast<float>(pixelsPerUnit)},
                        .w{drawCall.dst.w},
                        .h{drawCall.dst.h}};
 

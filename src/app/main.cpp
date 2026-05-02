@@ -11,8 +11,8 @@
 
 int main() {
   platform::sdl::Init init;
-  platform::sdl::Window window("Copacity", 640, 480);
-  platform::sdl::Renderer renderer(window, 160, 120);
+  platform::sdl::Window window("Copacity", 640, 512);
+  platform::sdl::Renderer renderer(window, 160, 128, 16);
   platform::sdl::Input input;
 
   gfx::Assets assets;

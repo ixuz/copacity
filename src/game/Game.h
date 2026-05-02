@@ -5,6 +5,7 @@
 #include "core/gfx/Init.h"
 
 #include <chrono>
+#include <cstdint>
 
 namespace gfx {
 class Renderer;
@@ -39,4 +40,5 @@ private:
   ecs::Systems logicSystems;
   ecs::Systems renderSystems;
   std::chrono::duration<float> fixedStep;
+  std::uint64_t tick = 0;
 };

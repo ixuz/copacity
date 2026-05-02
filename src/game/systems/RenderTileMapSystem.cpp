@@ -34,8 +34,8 @@ void RenderTileMapSystem::update(ecs::Registry &reg,
         srcRect.h = static_cast<float>(spriteWidth);
 
         gfx::Rect dstRect;
-        dstRect.x = static_cast<float>(x * spriteWidth);
-        dstRect.y = static_cast<float>(y * spriteWidth);
+        dstRect.x = static_cast<float>(x);
+        dstRect.y = static_cast<float>(y);
         dstRect.w = static_cast<float>(spriteWidth);
         dstRect.h = static_cast<float>(spriteWidth);
 

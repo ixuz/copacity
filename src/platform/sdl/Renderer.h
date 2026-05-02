@@ -18,7 +18,8 @@ class Window;
 
 class Renderer : public gfx::Renderer {
 public:
-  Renderer(Window &window, int logicalWidth, int logicalHeight);
+  Renderer(Window &window, int logicalWidth, int logicalHeight,
+           int pixelsPerUnit);
   ~Renderer() override;
 
   void beginFrame() override;
@@ -28,6 +29,7 @@ public:
   core::TextureId loadTexture(gfx::ImageData &imageData) override;
 
 private:
+  int pixelsPerUnit;
   SDL_Renderer *renderer;
   core::TextureId nextTextureId = 1;
   std::unordered_map<core::TextureId, SDL_Texture *> textures;

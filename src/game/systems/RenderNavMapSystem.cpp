@@ -71,8 +71,8 @@ void RenderNavMapSystem::update(ecs::Registry &reg,
             .w{static_cast<float>(PIXELS_PER_UNIT)},
             .h{static_cast<float>(PIXELS_PER_UNIT)}};
 
-        gfx::Rect dstRect{.x{static_cast<float>(PIXELS_PER_UNIT * x)},
-                          .y{static_cast<float>(PIXELS_PER_UNIT * y)},
+        gfx::Rect dstRect{.x{static_cast<float>(x)},
+                          .y{static_cast<float>(y)},
                           .w{static_cast<float>(PIXELS_PER_UNIT)},
                           .h{static_cast<float>(PIXELS_PER_UNIT)}};
 
