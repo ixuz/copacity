@@ -1,6 +1,8 @@
 add_library(game
+    systems/WalkerSystem.cpp
     systems/RenderSpriteSheetSystem.cpp
     systems/RenderTileMapSystem.cpp
+    systems/RenderNavMapSystem.cpp
     Game.cpp
 )
 

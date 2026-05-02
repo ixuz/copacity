@@ -2,7 +2,6 @@
 
 #include "core/ecs/Registry.h"
 #include "core/ecs/Systems.h"
-#include "game/components/Position.h"
 
 #include <algorithm>
 #include <chrono>

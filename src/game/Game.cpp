@@ -7,19 +7,25 @@
 #include "core/input/Input.h"
 
 #include "game/components/Animation.h"
+#include "game/components/GridPosition.h"
 #include "game/components/Map.h"
+#include "game/components/NavMap.h"
 #include "game/components/Player.h"
 #include "game/components/Position.h"
 #include "game/components/RenderLayer.h"
 #include "game/components/SpriteSheet.h"
 #include "game/components/TileMap.h"
 #include "game/components/Velocity.h"
+#include "game/components/Walker.h"
+
 #include "game/systems/AnimationSystem.h"
 #include "game/systems/MovementSystem.h"
 #include "game/systems/PlayerControlSystem.h"
 #include "game/systems/PrintFpsSystem.h"
+#include "game/systems/RenderNavMapSystem.h"
 #include "game/systems/RenderSpriteSheetSystem.h"
 #include "game/systems/RenderTileMapSystem.h"
+#include "game/systems/WalkerSystem.h"
 
 #include <chrono>
 #include <format>
@@ -40,13 +46,15 @@ Game::Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
 
   logicSystems.add<PlayerControlSystem>(input);
   logicSystems.add<MovementSystem>();
+  logicSystems.add<WalkerSystem>();
 
   renderSystems.add<AnimationSystem>();
-  renderSystems.add<RenderTileMapSystem>(drawCallQueue);
+  // renderSystems.add<RenderTileMapSystem>(drawCallQueue);
   renderSystems.add<RenderSpriteSheetSystem>(drawCallQueue);
+  renderSystems.add<RenderNavMapSystem>(drawCallQueue);
   renderSystems.add<PrintFpsSystem>();
 
-  auto playerEntity = registry.create();
+  /*auto playerEntity = registry.create();
   registry.add(playerEntity, Player{});
   registry.add(playerEntity, SpriteSheet{.textureId{playerTextureId},
                                          .spriteId{0},
@@ -60,7 +68,7 @@ Game::Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
       playerEntity,
       Animation{.frames{0, 1, 2, 3},
                 .frameTime{std::chrono::duration<float>(1.0f / 8.0f)}});
-  registry.add(playerEntity, RenderLayer{2});
+  registry.add(playerEntity, RenderLayer{2});*/
 
   auto mapEntity = registry.create();
   registry.add(mapEntity, Map{});
@@ -70,22 +78,45 @@ Game::Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
                                       .height{64},
                                       .cols{5},
                                       .rows{4}});
-  registry.add(
-      mapEntity,
-      TileMap{.width = 3,
-              .height = 3,
-              .tiles = {
-                  {5, Direction::Right | Direction::Down},
-                  {6, Direction::Left | Direction::Down},
-                  {9, Direction::Down},
-                  {7, Direction::Up | Direction::Right | Direction::Down},
-                  {12, Direction::Up | Direction::Left | Direction::Right},
-                  {11, Direction::Up | Direction::Left},
-                  {10, Direction::Up | Direction::Right},
-                  {15, Direction::Left | Direction::Right},
-                  {4, Direction::Left},
-              }});
+  registry.add(mapEntity, TileMap{.width = 3,
+                                  .height = 3,
+                                  .tiles = {
+                                      {5},
+                                      {6},
+                                      {9},
+                                      {7},
+                                      {12},
+                                      {11},
+                                      {10},
+                                      {15},
+                                      {4},
+                                  }});
+  registry.add(mapEntity, NavMap{.width{3},
+                                 .height{3},
+                                 .textureId{pathTextureId},
+                                 .nodes = {
+                                     {true},
+                                     {true},
+                                     {true},
+                                     {true},
+                                     {false},
+                                     {false},
+                                     {true},
+                                     {true},
+                                     {false},
+                                 }});
   registry.add(mapEntity, RenderLayer{1});
+
+  auto walkerEntity = registry.create();
+  registry.add(walkerEntity, Walker{});
+  registry.add(walkerEntity, GridPosition{0, 0});
+  registry.add(walkerEntity, SpriteSheet{.textureId{playerTextureId},
+                                         .spriteId{0},
+                                         .width{32},
+                                         .height{32},
+                                         .cols{2},
+                                         .rows{2}});
+  registry.add(walkerEntity, RenderLayer{2});
 }
 
 // TODO: Decouple simulation from render thread

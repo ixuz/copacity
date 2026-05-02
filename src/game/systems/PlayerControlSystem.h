@@ -14,8 +14,8 @@ public:
   void fixedUpdate(ecs::Registry &reg, std::chrono::duration<float>) override {
     for (auto [e, player, position, velocity] :
          reg.view<Player, Position, Velocity>()) {
-
-      auto keyboard = input.getKeyboard();
+      (void)e;
+      /*auto keyboard = input.getKeyboard();
       int right = keyboard.right ? 1 : 0;
       int left = keyboard.left ? 1 : 0;
       int up = keyboard.up ? 1 : 0;
@@ -69,7 +69,7 @@ public:
 
         position.x += static_cast<float>(xVelocity * tileSizeX);
         position.y += static_cast<float>(yVelocity * tileSizeY);
-      }
+      }*/
     }
   }
 
