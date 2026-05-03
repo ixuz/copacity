@@ -54,10 +54,10 @@ void Renderer::draw(const gfx::DrawCall &drawCall) {
                        .w{drawCall.src.w},
                        .h{drawCall.src.h}};
 
-  SDL_FRect dstSdlRect{.x{drawCall.dst.x * static_cast<float>(pixelsPerUnit)},
-                       .y{drawCall.dst.y * static_cast<float>(pixelsPerUnit)},
-                       .w{drawCall.dst.w * static_cast<float>(pixelsPerUnit)},
-                       .h{drawCall.dst.h * static_cast<float>(pixelsPerUnit)}};
+  SDL_FRect dstSdlRect{.x{drawCall.dst.x},
+                       .y{drawCall.dst.y},
+                       .w{drawCall.dst.w},
+                       .h{drawCall.dst.h}};
 
   SDL_RenderTexture(renderer, texture, &srcSdlRect, &dstSdlRect);
 }

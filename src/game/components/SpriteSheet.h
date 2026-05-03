@@ -6,6 +6,8 @@ struct SpriteSheet {
   core::TextureId textureId;
   int width;
   int height;
+  int logicalWidth;
+  int logicalHeight;
   int cols;
   int rows;
   int offsetX;

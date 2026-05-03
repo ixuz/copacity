@@ -13,7 +13,8 @@ class DrawCallQueue;
 
 class RenderTileMapSystem : public ecs::System {
 public:
-  explicit RenderTileMapSystem(gfx::DrawCallQueue &drawCallQueue);
+  explicit RenderTileMapSystem(gfx::DrawCallQueue &drawCallQueue,
+                               float pixelsPerUnit);
 
   void fixedUpdate(ecs::Registry &, std::chrono::duration<float>) override;
 
@@ -21,4 +22,5 @@ public:
 
 private:
   gfx::DrawCallQueue &drawCallQueue;
+  float pixelsPerUnit;
 };

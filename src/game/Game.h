@@ -22,7 +22,7 @@ class Game {
 public:
   explicit Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
                 gfx::DrawCallQueue &drawCallQueue, gfx::Assets &assets,
-                input::Input &input, float ticksPerSecond);
+                input::Input &input, float ticksPerSecond, float pixelsPerUnit);
   Game(const Game &) = delete;
   Game &operator=(const Game &) = delete;
   Game(Game &&) = default;

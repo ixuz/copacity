@@ -6,13 +6,15 @@
 #include "game/components/Camera.h"
 #include "game/components/Position.h"
 #include "game/components/RenderLayer.h"
+#include "game/components/Sprite.h"
 #include "game/components/SpriteSheet.h"
 #include "game/components/TileMap.h"
 
 #include <iostream>
 
-RenderTileMapSystem::RenderTileMapSystem(gfx::DrawCallQueue &drawCallQueue)
-    : drawCallQueue(drawCallQueue) {}
+RenderTileMapSystem::RenderTileMapSystem(gfx::DrawCallQueue &drawCallQueue,
+                                         float pixelsPerUnit)
+    : drawCallQueue(drawCallQueue), pixelsPerUnit(pixelsPerUnit) {}
 
 void RenderTileMapSystem::fixedUpdate(ecs::Registry &,
                                       std::chrono::duration<float>) {}
@@ -28,22 +30,24 @@ void RenderTileMapSystem::update(ecs::Registry &reg,
     cameraY = position.y;
   }
 
-  for (auto [e, tileMap, spriteSheet, renderLayer] :
-       reg.view<TileMap, SpriteSheet, RenderLayer>()) {
+  for (auto [e, tileMap, spriteSheet, sprite, renderLayer] :
+       reg.view<TileMap, SpriteSheet, Sprite, RenderLayer>()) {
 
-    float pixelsPerUnit = 16.0f;
+    float tileWidth = static_cast<float>(tileMap.tileWidth) / pixelsPerUnit;
+    float tileHeight = static_cast<float>(tileMap.tileHeight) / pixelsPerUnit;
 
-    float tileWidth = 32.0f / pixelsPerUnit;
-    float tileHeight = 17.0f / pixelsPerUnit;
+    int spriteWidth = spriteSheet.width / spriteSheet.cols;
+    int spriteHeight = spriteSheet.height / spriteSheet.rows;
 
-    int spriteWidth = spriteSheet.width / spriteSheet.cols;   // 32
-    int spriteHeight = spriteSheet.height / spriteSheet.rows; // 27
+    float ratioX = static_cast<float>(spriteSheet.width) /
+                   static_cast<float>(spriteSheet.logicalWidth);
+    float ratioY = static_cast<float>(spriteSheet.height) /
+                   static_cast<float>(spriteSheet.logicalHeight);
 
-    float spriteWorldWidth = static_cast<float>(spriteWidth) / pixelsPerUnit;
-    float spriteWorldHeight = static_cast<float>(spriteHeight) / pixelsPerUnit;
-
-    float anchorX = static_cast<float>(spriteSheet.offsetX) / pixelsPerUnit;
-    float anchorY = static_cast<float>(spriteSheet.offsetY) / pixelsPerUnit;
+    float anchorX =
+        (static_cast<float>(spriteSheet.offsetX) / ratioX) / pixelsPerUnit;
+    float anchorY =
+        (static_cast<float>(spriteSheet.offsetY) / ratioY) / pixelsPerUnit;
 
     for (int y = 0; y < tileMap.height; y++) {
       for (int x = 0; x < tileMap.width; x++) {
@@ -62,11 +66,18 @@ void RenderTileMapSystem::update(ecs::Registry &reg,
         float isoX = static_cast<float>(x - y) * (tileWidth * 0.5f);
         float isoY = static_cast<float>(x + y) * (tileHeight * 0.5f);
 
+        float spriteLogicalWidth =
+            static_cast<float>(spriteSheet.logicalWidth) /
+            static_cast<float>(spriteSheet.cols);
+        float spriteLogicalHeight =
+            static_cast<float>(spriteSheet.logicalHeight) /
+            static_cast<float>(spriteSheet.rows);
+
         gfx::Rect dstRect;
-        dstRect.x = isoX - anchorX - cameraX;
-        dstRect.y = isoY - anchorY - cameraY;
-        dstRect.w = spriteWorldWidth;
-        dstRect.h = spriteWorldHeight;
+        dstRect.x = (isoX - anchorX - cameraX) * pixelsPerUnit;
+        dstRect.y = (isoY - anchorY - cameraY) * pixelsPerUnit;
+        dstRect.w = spriteLogicalWidth;
+        dstRect.h = spriteLogicalHeight;
 
         core::TextureId textureId = spriteSheet.textureId;
 

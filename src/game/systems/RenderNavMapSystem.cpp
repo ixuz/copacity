@@ -48,7 +48,7 @@ void RenderNavMapSystem::fixedUpdate(ecs::Registry &,
 
 void RenderNavMapSystem::update(ecs::Registry &reg,
                                 std::chrono::duration<float>, float) {
-  // const int PIXELS_PER_UNIT = 16;
+
   for (auto [e, navMap, tileMap, renderLayer] :
        reg.view<NavMap, TileMap, RenderLayer>()) {
 

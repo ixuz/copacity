@@ -19,6 +19,7 @@ int main() {
   gfx::DrawCallQueue drawCallQueue;
   gfx::RenderPipeline renderPipeline(renderer);
 
-  Game game(renderer, renderPipeline, drawCallQueue, assets, input, 4.0f);
+  Game game(renderer, renderPipeline, drawCallQueue, assets, input, 4.0f,
+            16.0f);
   game.run();
 }
