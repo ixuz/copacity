@@ -20,7 +20,8 @@ class RenderSpriteSheetSystem : public ecs::System {
 public:
   explicit RenderSpriteSheetSystem(gfx::DrawCallQueue &drawCallQueue);
   void fixedUpdate(ecs::Registry &, std::chrono::duration<float>) override;
-  void update(ecs::Registry &reg, std::chrono::duration<float>) override;
+  void update(ecs::Registry &reg, std::chrono::duration<float> dt,
+              float alpha) override;
 
 private:
   gfx::DrawCallQueue &drawCallQueue;

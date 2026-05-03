@@ -17,7 +17,7 @@ public:
 
   void fixedUpdate(ecs::Registry &, std::chrono::duration<float>) override;
 
-  void update(ecs::Registry &reg, std::chrono::duration<float>) override;
+  void update(ecs::Registry &reg, std::chrono::duration<float>, float) override;
 
 private:
   gfx::DrawCallQueue &drawCallQueue;

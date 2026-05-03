@@ -11,6 +11,5 @@ struct NavNode {
 
 struct NavMap {
   int width, height;
-  core::TextureId textureId;
   std::vector<NavNode> nodes;
 };

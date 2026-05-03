@@ -98,6 +98,19 @@ public:
     return store ? store->has(e) : false;
   }
 
+  template <typename... Ts> auto find() -> std::optional<std::tuple<Ts &...>> {
+    for (auto tuple : view<Ts...>()) {
+      return std::apply(
+          [](Entity, Ts &...components) {
+            return std::optional<std::tuple<Ts &...>>(
+                std::tuple<Ts &...>(components...));
+          },
+          tuple);
+    }
+
+    return std::nullopt;
+  }
+
   template <typename T> T *first() {
     for (auto [e, c] : view<T>()) {
       return &c;

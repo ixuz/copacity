@@ -17,7 +17,7 @@ class RenderNavMapSystem : public ecs::System {
 public:
   explicit RenderNavMapSystem(gfx::DrawCallQueue &drawCallQueue);
   void fixedUpdate(ecs::Registry &, std::chrono::duration<float>) override;
-  void update(ecs::Registry &reg, std::chrono::duration<float>) override;
+  void update(ecs::Registry &reg, std::chrono::duration<float>, float) override;
 
 private:
   std::vector<int> getNeighbors(const NavMap &map, int x, int y);

@@ -9,7 +9,8 @@
 class PrintFpsSystem : public ecs::System {
 public:
   void fixedUpdate(ecs::Registry &, std::chrono::duration<float>) override {}
-  void update(ecs::Registry &, std::chrono::duration<float> dt) override {
+  void update(ecs::Registry &, std::chrono::duration<float> dt,
+              float) override {
     frameCount++;
     timeAccumulator += dt;
 

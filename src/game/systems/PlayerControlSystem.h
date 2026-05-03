@@ -73,7 +73,7 @@ public:
     }
   }
 
-  void update(ecs::Registry &, std::chrono::duration<float>) override {}
+  void update(ecs::Registry &, std::chrono::duration<float>, float) override {}
 
 private:
   input::Input &input;

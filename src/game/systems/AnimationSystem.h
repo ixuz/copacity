@@ -11,7 +11,8 @@ class AnimationSystem : public ecs::System {
 public:
   void fixedUpdate(ecs::Registry &, std::chrono::duration<float>) override {}
 
-  void update(ecs::Registry &reg, std::chrono::duration<float> dt) override {
+  void update(ecs::Registry &reg, std::chrono::duration<float> dt,
+              float) override {
 
     for (auto [e, animation, walker] : reg.view<Animation, Walker>()) {
       animation.setParameter("walking", walker.walking);

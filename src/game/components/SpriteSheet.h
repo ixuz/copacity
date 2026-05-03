@@ -9,4 +9,6 @@ struct SpriteSheet {
   int height;
   int cols;
   int rows;
+  int offsetX;
+  int offsetY;
 };

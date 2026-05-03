@@ -17,7 +17,8 @@ public:
   virtual ~System() = default;
   virtual void fixedUpdate(Registry &registry,
                            std::chrono::duration<float> dt) = 0;
-  virtual void update(Registry &registry, std::chrono::duration<float> dt) = 0;
+  virtual void update(Registry &registry, std::chrono::duration<float> dt,
+                      float alpha) = 0;
 };
 
 // -------------------- System Manager --------------------
@@ -37,9 +38,10 @@ public:
     }
   }
 
-  void update(Registry &registry, std::chrono::duration<float> dt) {
+  void update(Registry &registry, std::chrono::duration<float> dt,
+              float alpha) {
     for (auto &sys : systems) {
-      sys->update(registry, dt);
+      sys->update(registry, dt, alpha);
     }
   }
 

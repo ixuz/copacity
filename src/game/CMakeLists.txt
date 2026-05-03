@@ -1,4 +1,5 @@
 add_library(game
+    systems/CameraSystem.cpp
     systems/WalkerSystem.cpp
     systems/RenderSpriteSheetSystem.cpp
     systems/RenderTileMapSystem.cpp

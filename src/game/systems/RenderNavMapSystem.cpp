@@ -4,6 +4,7 @@
 #include "core/gfx/DrawCallQueue.h"
 #include "game/components/NavMap.h"
 #include "game/components/RenderLayer.h"
+#include "game/components/TileMap.h"
 
 #include <format>
 #include <iostream>
@@ -14,29 +15,29 @@ RenderNavMapSystem::RenderNavMapSystem(gfx::DrawCallQueue &drawCallQueue)
     : drawCallQueue(drawCallQueue),
       maskToSprite({
           //{core::Direction::None, 0},
-          {core::Direction::None, 1},
+          {core::Direction::None, 13},
           {core::Direction::Up | core::Direction::Right |
                core::Direction::Down | core::Direction::Left,
-           2},
-          {core::Direction::Right, 3},
-          {core::Direction::Left, 4},
-          {core::Direction::Right | core::Direction::Down, 5},
-          {core::Direction::Down | core::Direction::Left, 6},
+           14},
+          {core::Direction::Right, 0},
+          {core::Direction::Left, 2},
+          {core::Direction::Right | core::Direction::Down, 4},
+          {core::Direction::Down | core::Direction::Left, 5},
           {core::Direction::Up | core::Direction::Right | core::Direction::Down,
-           7},
+           11},
           {core::Direction::Right | core::Direction::Down |
                core::Direction::Left,
            8},
-          {core::Direction::Down, 9},
-          {core::Direction::Right | core::Direction::Up, 10},
-          {core::Direction::Left | core::Direction::Up, 11},
+          {core::Direction::Down, 1},
+          {core::Direction::Right | core::Direction::Up, 7},
+          {core::Direction::Left | core::Direction::Up, 6},
           {core::Direction::Right | core::Direction::Left | core::Direction::Up,
-           12},
+           10},
           {core::Direction::Down | core::Direction::Left | core::Direction::Up,
-           13},
-          {core::Direction::Up, 14},
-          {core::Direction::Right | core::Direction::Left, 15},
-          {core::Direction::Down | core::Direction::Up, 16},
+           9},
+          {core::Direction::Up, 3},
+          {core::Direction::Right | core::Direction::Left, 16},
+          {core::Direction::Down | core::Direction::Up, 17},
           //{core::Direction::None, 17},
           //{core::Direction::None, 18},
           //{core::Direction::None, 19},
@@ -46,17 +47,21 @@ void RenderNavMapSystem::fixedUpdate(ecs::Registry &,
                                      std::chrono::duration<float>) {}
 
 void RenderNavMapSystem::update(ecs::Registry &reg,
-                                std::chrono::duration<float>) {
-  const int PIXELS_PER_UNIT = 16;
-  for (auto [e, navMap, renderLayer] : reg.view<NavMap, RenderLayer>()) {
+                                std::chrono::duration<float>, float) {
+  // const int PIXELS_PER_UNIT = 16;
+  for (auto [e, navMap, tileMap, renderLayer] :
+       reg.view<NavMap, TileMap, RenderLayer>()) {
+
+    // TODO: Asset that navMap and tileMap dimensions are equal
 
     computeRegions(navMap);
 
     for (int y = 0; y < navMap.height; y++) {
       for (int x = 0; x < navMap.width; x++) {
-        int nodeIndex = y * navMap.width + x;
+        int index = y * navMap.width + x;
 
-        const NavNode &navNode = navMap.nodes[nodeIndex];
+        const NavNode &navNode = navMap.nodes[index];
+        Tile &tile = tileMap.tiles[index];
 
         if (!navNode.walkable)
           continue;
@@ -65,21 +70,7 @@ void RenderNavMapSystem::update(ecs::Registry &reg,
         if (spriteId < 0)
           continue;
 
-        gfx::Rect srcRect{
-            .x{static_cast<float>((spriteId % 5) * PIXELS_PER_UNIT)},
-            .y{static_cast<float>((spriteId / 5) * PIXELS_PER_UNIT)},
-            .w{static_cast<float>(PIXELS_PER_UNIT)},
-            .h{static_cast<float>(PIXELS_PER_UNIT)}};
-
-        gfx::Rect dstRect{.x{static_cast<float>(x)},
-                          .y{static_cast<float>(y)},
-                          .w{static_cast<float>(PIXELS_PER_UNIT)},
-                          .h{static_cast<float>(PIXELS_PER_UNIT)}};
-
-        drawCallQueue.submit(gfx::DrawCall{.textureId{navMap.textureId},
-                                           .src{srcRect},
-                                           .dst{dstRect},
-                                           .renderLayer{renderLayer.z}});
+        tile.spriteId = spriteId;
       }
     }
   }

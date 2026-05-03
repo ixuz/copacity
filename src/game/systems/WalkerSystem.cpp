@@ -13,7 +13,8 @@ void WalkerSystem::fixedUpdate(ecs::Registry &reg,
   if (!navMap)
     return;
 
-  for (auto [e, walker, gridPosition] : reg.view<Walker, GridPosition>()) {
+  for (auto [e, walker, gridPosition, previousGridPosition] :
+       reg.view<Walker, GridPosition, PreviousGridPosition>()) {
 
     std::vector<core::Direction> walkDirectionPriorityQueue;
 
@@ -52,10 +53,14 @@ void WalkerSystem::fixedUpdate(ecs::Registry &reg,
     }
 
     if (confirmedWalkDirection) {
+      previousGridPosition.x = gridPosition.x;
+      previousGridPosition.y = gridPosition.y;
+
       gridPosition.x =
           gridPosition.x + directionToDeltaX(confirmedWalkDirection.value());
       gridPosition.y =
           gridPosition.y + directionToDeltaY(confirmedWalkDirection.value());
+
       walker.walking = true;
       walker.currentWalkingDirection = confirmedWalkDirection.value();
     } else {
@@ -64,7 +69,8 @@ void WalkerSystem::fixedUpdate(ecs::Registry &reg,
   }
 }
 
-void WalkerSystem::update(ecs::Registry &, std::chrono::duration<float>) {}
+void WalkerSystem::update(ecs::Registry &, std::chrono::duration<float>,
+                          float) {}
 
 bool WalkerSystem::isNavNodeWalkable(NavMap &navMap,
                                      GridPosition gridPosition) {
