@@ -9,6 +9,7 @@
 #include "game/components/Position.h"
 #include "game/components/PreviousGridPosition.h"
 #include "game/components/RenderLayer.h"
+#include "game/components/Sprite.h"
 #include "game/components/SpriteSheet.h"
 
 RenderSpriteSheetSystem::RenderSpriteSheetSystem(
@@ -31,9 +32,9 @@ void RenderSpriteSheetSystem::update(ecs::Registry &reg,
   }
 
   for (auto [e, previousGridPosition, gridPosition, gridDimension, spriteSheet,
-             renderLayer] :
+             sprite, renderLayer] :
        reg.view<PreviousGridPosition, GridPosition, GridDimension, SpriteSheet,
-                RenderLayer>()) {
+                Sprite, RenderLayer>()) {
 
     float pixelsPerUnit = 16.0f;
 
@@ -58,10 +59,10 @@ void RenderSpriteSheetSystem::update(ecs::Registry &reg,
         static_cast<float>(gridPosition.y - previousGridPosition.y) * alpha;
 
     gfx::Rect srcRect;
-    srcRect.x = static_cast<float>((spriteSheet.spriteId % spriteSheet.cols) *
-                                   spriteWidth);
-    srcRect.y = static_cast<float>((spriteSheet.spriteId / spriteSheet.cols) *
-                                   spriteHeight);
+    srcRect.x =
+        static_cast<float>((sprite.spriteId % spriteSheet.cols) * spriteWidth);
+    srcRect.y =
+        static_cast<float>((sprite.spriteId / spriteSheet.cols) * spriteHeight);
     srcRect.w = static_cast<float>(spriteWidth);
     srcRect.h = static_cast<float>(spriteHeight);
 

@@ -4,7 +4,6 @@
 
 struct SpriteSheet {
   core::TextureId textureId;
-  core::SpriteId spriteId;
   int width;
   int height;
   int cols;

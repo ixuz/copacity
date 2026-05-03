@@ -3,6 +3,7 @@
 #include "core/ecs/Registry.h"
 #include "core/ecs/Systems.h"
 #include "game/components/Animation.h"
+#include "game/components/Sprite.h"
 #include "game/components/SpriteSheet.h"
 
 #include <iostream>
@@ -20,12 +21,12 @@ public:
                              static_cast<int>(walker.currentWalkingDirection));
     }
 
-    for (auto [e, animation, spriteSheet] :
-         reg.view<Animation, SpriteSheet>()) {
+    for (auto [e, animation, spriteSheet, sprite] :
+         reg.view<Animation, SpriteSheet, Sprite>()) {
 
       evaluateRules(animation);
       advanceFrames(animation, dt);
-      spriteSheet.spriteId = animation.currentSpriteFrame;
+      sprite.spriteId = animation.currentSpriteFrame;
     }
   }
 

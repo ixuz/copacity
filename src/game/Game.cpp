@@ -17,6 +17,7 @@
 #include "game/components/Position.h"
 #include "game/components/PreviousGridPosition.h"
 #include "game/components/RenderLayer.h"
+#include "game/components/Sprite.h"
 #include "game/components/SpriteSheet.h"
 #include "game/components/TileMap.h"
 #include "game/components/Velocity.h"
@@ -44,13 +45,11 @@ Game::Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
       fixedStep(1.0f / ticksPerSecond) {
 
   auto tilesImageData = assets.loadImage("assets/tiles.png");
-  // auto playerImageData = assets.loadImage("assets/player.png");
   auto navImageData = assets.loadImage("assets/nav.png");
   auto walkerImageData = assets.loadImage("assets/walker.png");
   auto buildingsImageData = assets.loadImage("assets/buildings.png");
 
   auto tilesTextureId = renderer.loadTexture(tilesImageData);
-  // auto playerTextureId = renderer.loadTexture(playerImageData);
   auto navTextureId = renderer.loadTexture(navImageData);
   auto walkerTextureId = renderer.loadTexture(walkerImageData);
   auto buildingsTextureId = renderer.loadTexture(buildingsImageData);
@@ -70,33 +69,16 @@ Game::Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
   registry.add(cameraEntity, Camera{});
   registry.add(cameraEntity, Position{-5, -3});
 
-  /*auto playerEntity = registry.create();
-  registry.add(playerEntity, Player{});
-  registry.add(playerEntity, SpriteSheet{.textureId{playerTextureId},
-                                         .spriteId{0},
-                                         .width{32},
-                                         .height{32},
-                                         .cols{2},
-                                         .rows{2}});
-  registry.add(playerEntity, Position{0, 0});
-  registry.add(playerEntity, Velocity{0, 0});
-  registry.add(
-      playerEntity,
-      Animation{.frames{0, 1, 2, 3},
-                .frameTime{std::chrono::duration<float>(1.0f / 8.0f)}});
-  registry.add(playerEntity, RenderLayer{2});*/
-
   auto terrainEntity = registry.create();
   registry.add(terrainEntity, Map{});
-  registry.add(terrainEntity,
-               SpriteSheet{.textureId{tilesTextureId},
-                           .spriteId{0}, // TODO: Remove this property
-                           .width{128},
-                           .height{27},
-                           .cols{4},
-                           .rows{1},
-                           .offsetX{16},
-                           .offsetY{16}});
+  registry.add(terrainEntity, Sprite{.spriteId{0}});
+  registry.add(terrainEntity, SpriteSheet{.textureId{tilesTextureId},
+                                          .width{128},
+                                          .height{27},
+                                          .cols{4},
+                                          .rows{1},
+                                          .offsetX{16},
+                                          .offsetY{16}});
   registry.add(terrainEntity,
                TileMap{.width{5},
                        .height{5},
@@ -109,15 +91,14 @@ Game::Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
 
   auto navMapEntity = registry.create();
   registry.add(navMapEntity, Map{});
-  registry.add(navMapEntity,
-               SpriteSheet{.textureId{navTextureId},
-                           .spriteId{0}, // TODO: Remove this property
-                           .width{128},
-                           .height{85},
-                           .cols{4},
-                           .rows{5},
-                           .offsetX{16},
-                           .offsetY{16}});
+  registry.add(navMapEntity, Sprite{.spriteId{0}});
+  registry.add(navMapEntity, SpriteSheet{.textureId{navTextureId},
+                                         .width{128},
+                                         .height{85},
+                                         .cols{4},
+                                         .rows{5},
+                                         .offsetX{16},
+                                         .offsetY{16}});
   registry.add(navMapEntity,
                TileMap{.width{5},
                        .height{5},
@@ -143,16 +124,14 @@ Game::Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
   registry.add(buildingEntity, PreviousGridPosition{3, 3});
   registry.add(buildingEntity, GridPosition{3, 3});
   registry.add(buildingEntity, GridDimension{3, 3});
-
-  registry.add(buildingEntity,
-               SpriteSheet{.textureId{buildingsTextureId},
-                           .spriteId{0}, // TODO: Remove this property
-                           .width{512},
-                           .height{128},
-                           .cols{4},
-                           .rows{1},
-                           .offsetX{64},
-                           .offsetY{126}});
+  registry.add(buildingEntity, Sprite{.spriteId{0}});
+  registry.add(buildingEntity, SpriteSheet{.textureId{buildingsTextureId},
+                                           .width{512},
+                                           .height{128},
+                                           .cols{4},
+                                           .rows{1},
+                                           .offsetX{64},
+                                           .offsetY{126}});
   registry.add(buildingEntity, RenderLayer{30000});
 
   auto walkerEntity = registry.create();
@@ -162,8 +141,8 @@ Game::Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
   registry.add(walkerEntity, PreviousGridPosition{0, 0});
   registry.add(walkerEntity, GridPosition{0, 0});
   registry.add(walkerEntity, GridDimension{1, 1});
+  registry.add(walkerEntity, Sprite{.spriteId{0}});
   registry.add(walkerEntity, SpriteSheet{.textureId{walkerTextureId},
-                                         .spriteId{0},
                                          .width{240},
                                          .height{256},
                                          .cols{5},
