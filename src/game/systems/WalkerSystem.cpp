@@ -56,9 +56,10 @@ void WalkerSystem::fixedUpdate(ecs::Registry &reg,
           gridPosition.x + directionToDeltaX(confirmedWalkDirection.value());
       gridPosition.y =
           gridPosition.y + directionToDeltaY(confirmedWalkDirection.value());
+      walker.walking = true;
       walker.currentWalkingDirection = confirmedWalkDirection.value();
     } else {
-      walker.currentWalkingDirection = core::Direction::None;
+      walker.walking = false;
     }
   }
 }

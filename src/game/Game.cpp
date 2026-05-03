@@ -131,26 +131,92 @@ Game::Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
   registry.add(navMapEntity, RenderLayer{2});
 
   auto walkerEntity = registry.create();
-  registry.add(walkerEntity, Walker{});
-  registry.add(walkerEntity, GridPosition{4, 4});
+  registry.add(
+      walkerEntity,
+      Walker{.walking{false}, .currentWalkingDirection{core::Direction::Down}});
+  registry.add(walkerEntity, GridPosition{0, 0});
   registry.add(walkerEntity, SpriteSheet{.textureId{walkerTextureId},
                                          .spriteId{0},
                                          .width{240},
                                          .height{256},
                                          .cols{5},
                                          .rows{4}});
-  // TODO: Walker right-down idle: {0}
-  // TODO: Walker right-down animation walk: {1, 2, 3, 4}
-  // TODO: Walker down-left idle: {5}
-  // TODO: Walker down-left animation walk: {6, 7, 8, 9}
-  // TODO: Walker left-up idle: {10}
-  // TODO: Walker left-up animation walk: {11, 12, 13, 14}
-  // TODO: Walker up-right idle: {15}
-  // TODO: Walker up-right animation walk: {16, 17, 18, 19}
-  registry.add(
-      walkerEntity,
-      Animation{.frames{11, 12, 13, 14},
-                .frameTime{std::chrono::duration<float>(1.0f / 6.0f)}});
+  Animation walkerAnimation{
+      .frames = {},
+      .parameters = {{"walking", false},
+                     {"direction", static_cast<int>(core::Direction::Down)}},
+      .rules =
+          {// Walker right-down idle
+           {.conditions = {{"walking", AnimationComparisonOp::Equal, false},
+                           {"direction", AnimationComparisonOp::Equal,
+                            static_cast<int>(core::Direction::Down)}},
+            .frames = {0},
+            .priority = 1,
+            .loop = true},
+
+           // Walker down-left idle
+           {.conditions = {{"walking", AnimationComparisonOp::Equal, false},
+                           {"direction", AnimationComparisonOp::Equal,
+                            static_cast<int>(core::Direction::Left)}},
+            .frames = {5},
+            .priority = 1,
+            .loop = true},
+
+           // Walker left-up idle
+           {.conditions = {{"walking", AnimationComparisonOp::Equal, false},
+                           {"direction", AnimationComparisonOp::Equal,
+                            static_cast<int>(core::Direction::Up)}},
+            .frames = {10},
+            .priority = 1,
+            .loop = true},
+
+           // Walker up-right idle
+           {.conditions = {{"walking", AnimationComparisonOp::Equal, false},
+                           {"direction", AnimationComparisonOp::Equal,
+                            static_cast<int>(core::Direction::Right)}},
+            .frames = {15},
+            .priority = 1,
+            .loop = true},
+
+           // right-down animation walk
+           {.conditions = {{"walking", AnimationComparisonOp::Equal, true},
+                           {"direction", AnimationComparisonOp::Equal,
+                            static_cast<int>(core::Direction::Down)}},
+            .frames = {1, 2, 3, 4},
+            .priority = 10,
+            .loop = true},
+
+           // Walker down-left animation walk
+           {.conditions = {{"walking", AnimationComparisonOp::Equal, true},
+                           {"direction", AnimationComparisonOp::Equal,
+                            static_cast<int>(core::Direction::Left)}},
+            .frames = {6, 7, 8, 9},
+            .priority = 10,
+            .loop = true},
+
+           // Walker left-up animation walk
+           {.conditions = {{"walking", AnimationComparisonOp::Equal, true},
+                           {"direction", AnimationComparisonOp::Equal,
+                            static_cast<int>(core::Direction::Up)}},
+            .frames = {11, 12, 13, 14},
+            .priority = 10,
+            .loop = true},
+
+           // Walker up-right animation walk
+           {.conditions = {{"walking", AnimationComparisonOp::Equal, true},
+                           {"direction", AnimationComparisonOp::Equal,
+                            static_cast<int>(core::Direction::Right)}},
+            .frames = {16, 17, 18, 19},
+            .priority = 10,
+            .loop = true}},
+      .elapsedTime = std::chrono::duration<float>{0.0f},
+      .frameTime = std::chrono::duration<float>{0.15f},
+      .currentFrame = 0,
+      .looping = true,
+      .currentSpriteFrame = 0};
+  walkerAnimation.sortRulesByPriority();
+
+  registry.add(walkerEntity, walkerAnimation);
   registry.add(walkerEntity, RenderLayer{3});
 }
 
