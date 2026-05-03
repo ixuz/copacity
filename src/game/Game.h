@@ -22,7 +22,8 @@ class Game {
 public:
   explicit Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
                 gfx::DrawCallQueue &drawCallQueue, gfx::Assets &assets,
-                input::Input &input, float ticksPerSecond, float pixelsPerUnit);
+                input::Input &input, float ticksPerSecond, float pixelsPerUnit,
+                float logicalWidth, float logicalHeight);
   Game(const Game &) = delete;
   Game &operator=(const Game &) = delete;
   Game(Game &&) = default;

@@ -11,12 +11,10 @@
 namespace platform {
 namespace sdl {
 
-Renderer::Renderer(Window &window, int logicalWidth, int logicalHeight,
-                   int pixelsPerUnit)
-    : pixelsPerUnit(pixelsPerUnit) {
+Renderer::Renderer(Window &window, int width, int height) {
   this->renderer = SDL_CreateRenderer(window.getSdlWindow(), nullptr);
 
-  if (!SDL_SetRenderLogicalPresentation(renderer, logicalWidth, logicalHeight,
+  if (!SDL_SetRenderLogicalPresentation(renderer, width, height,
                                         SDL_LOGICAL_PRESENTATION_LETTERBOX)) {
     throw std::runtime_error(std::format(
         "SDL_SetRenderLogicalPresentation failed: {}", SDL_GetError()));

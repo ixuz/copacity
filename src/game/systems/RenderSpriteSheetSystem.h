@@ -19,7 +19,8 @@ class DrawCallQueue;
 class RenderSpriteSheetSystem : public ecs::System {
 public:
   explicit RenderSpriteSheetSystem(gfx::DrawCallQueue &drawCallQueue,
-                                   float pixelsPerUnit);
+                                   float pixelsPerUnit, float logicalWidth,
+                                   float logicalHeight);
   void fixedUpdate(ecs::Registry &, std::chrono::duration<float>) override;
   void update(ecs::Registry &reg, std::chrono::duration<float> dt,
               float alpha) override;
@@ -27,4 +28,5 @@ public:
 private:
   gfx::DrawCallQueue &drawCallQueue;
   float pixelsPerUnit;
+  float logicalWidth, logicalHeight;
 };

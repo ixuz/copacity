@@ -13,8 +13,10 @@
 #include "game/components/SpriteSheet.h"
 
 RenderSpriteSheetSystem::RenderSpriteSheetSystem(
-    gfx::DrawCallQueue &drawCallQueue, float pixelsPerUnit)
-    : drawCallQueue(drawCallQueue), pixelsPerUnit(pixelsPerUnit) {}
+    gfx::DrawCallQueue &drawCallQueue, float pixelsPerUnit, float logicalWidth,
+    float logicalHeight)
+    : drawCallQueue(drawCallQueue), pixelsPerUnit(pixelsPerUnit),
+      logicalWidth(logicalWidth), logicalHeight(logicalHeight) {}
 
 void RenderSpriteSheetSystem::fixedUpdate(ecs::Registry &,
                                           std::chrono::duration<float>) {}
@@ -36,8 +38,8 @@ void RenderSpriteSheetSystem::update(ecs::Registry &reg,
        reg.view<PreviousGridPosition, GridPosition, GridDimension, SpriteSheet,
                 Sprite, RenderLayer>()) {
 
-    float tileWidth = 32.0f / pixelsPerUnit;
-    float tileHeight = 17.0f / pixelsPerUnit;
+    float tileWidth = logicalWidth / pixelsPerUnit;
+    float tileHeight = logicalHeight / pixelsPerUnit;
 
     int spriteWidth = spriteSheet.width / spriteSheet.cols;   // 32
     int spriteHeight = spriteSheet.height / spriteSheet.rows; // 27

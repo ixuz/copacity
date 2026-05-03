@@ -38,7 +38,8 @@
 
 Game::Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
            gfx::DrawCallQueue &drawCallQueue, gfx::Assets &assets,
-           input::Input &input, float ticksPerSecond, float pixelsPerUnit)
+           input::Input &input, float ticksPerSecond, float pixelsPerUnit,
+           float logicalWidth, float logicalHeight)
     : renderer(renderer), renderPipeline(renderPipeline),
       drawCallQueue(drawCallQueue), assets(assets), input(input),
       fixedStep(1.0f / ticksPerSecond) {
@@ -58,8 +59,10 @@ Game::Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
   logicSystems.add<WalkerSystem>();
 
   renderSystems.add<AnimationSystem>();
-  renderSystems.add<RenderTileMapSystem>(drawCallQueue, pixelsPerUnit);
-  renderSystems.add<RenderSpriteSheetSystem>(drawCallQueue, pixelsPerUnit);
+  renderSystems.add<RenderTileMapSystem>(drawCallQueue, pixelsPerUnit,
+                                         logicalWidth, logicalHeight);
+  renderSystems.add<RenderSpriteSheetSystem>(drawCallQueue, pixelsPerUnit,
+                                             logicalWidth, logicalHeight);
   renderSystems.add<RenderNavMapSystem>(drawCallQueue);
   renderSystems.add<PrintFpsSystem>();
 
@@ -82,8 +85,6 @@ Game::Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
   registry.add(terrainEntity,
                TileMap{.width{5},
                        .height{5},
-                       .tileWidth{32},
-                       .tileHeight{17},
                        .tiles{
                            {0}, {1}, {0}, {1}, {0}, {2}, {3}, {2}, {3},
                            {2}, {0}, {1}, {0}, {1}, {0}, {2}, {3}, {2},
@@ -106,8 +107,6 @@ Game::Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
   registry.add(navMapEntity,
                TileMap{.width{5},
                        .height{5},
-                       .tileWidth{32},
-                       .tileHeight{17},
                        .tiles{
                            {12}, {12}, {12}, {12}, {12}, {12}, {12}, {12}, {12},
                            {12}, {12}, {12}, {12}, {12}, {12}, {12}, {12}, {12},

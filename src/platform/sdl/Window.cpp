@@ -5,8 +5,8 @@
 namespace platform {
 namespace sdl {
 
-Window::Window(std::string_view title, int width, int height)
-    : width(width), height(height) {
+Window::Window(std::string title, int width, int height)
+    : title(title), width(width), height(height) {
   window = SDL_CreateWindow(title.data(), width, height, SDL_WINDOW_RESIZABLE);
 }
 
@@ -14,6 +14,8 @@ Window::~Window() {
   if (window)
     SDL_DestroyWindow(window);
 }
+
+std::string Window::getTitle() { return title; }
 
 int Window::getWidth() { return width; }
 

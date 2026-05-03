@@ -13,8 +13,11 @@
 #include <iostream>
 
 RenderTileMapSystem::RenderTileMapSystem(gfx::DrawCallQueue &drawCallQueue,
-                                         float pixelsPerUnit)
-    : drawCallQueue(drawCallQueue), pixelsPerUnit(pixelsPerUnit) {}
+                                         float pixelsPerUnit,
+                                         float logicalWidth,
+                                         float logicalHeight)
+    : drawCallQueue(drawCallQueue), pixelsPerUnit(pixelsPerUnit),
+      logicalWidth(logicalWidth), logicalHeight(logicalHeight) {}
 
 void RenderTileMapSystem::fixedUpdate(ecs::Registry &,
                                       std::chrono::duration<float>) {}
@@ -33,8 +36,8 @@ void RenderTileMapSystem::update(ecs::Registry &reg,
   for (auto [e, tileMap, spriteSheet, sprite, renderLayer] :
        reg.view<TileMap, SpriteSheet, Sprite, RenderLayer>()) {
 
-    float tileWidth = static_cast<float>(tileMap.tileWidth) / pixelsPerUnit;
-    float tileHeight = static_cast<float>(tileMap.tileHeight) / pixelsPerUnit;
+    float tileWidth = logicalWidth / pixelsPerUnit;
+    float tileHeight = logicalHeight / pixelsPerUnit;
 
     int spriteWidth = spriteSheet.width / spriteSheet.cols;
     int spriteHeight = spriteSheet.height / spriteSheet.rows;
