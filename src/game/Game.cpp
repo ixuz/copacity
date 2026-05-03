@@ -39,12 +39,14 @@ Game::Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
       fixedStep(1.0f / ticksPerSecond) {
 
   auto terrainImageData = assets.loadImage("assets/terrain.png");
-  auto playerImageData = assets.loadImage("assets/player.png");
+  // auto playerImageData = assets.loadImage("assets/player.png");
   auto pathImageData = assets.loadImage("assets/path.png");
+  auto walkerImageData = assets.loadImage("assets/walker.png");
 
   auto terrainTextureId = renderer.loadTexture(terrainImageData);
-  auto playerTextureId = renderer.loadTexture(playerImageData);
+  // auto playerTextureId = renderer.loadTexture(playerImageData);
   auto pathTextureId = renderer.loadTexture(pathImageData);
+  auto walkerTextureId = renderer.loadTexture(walkerImageData);
 
   logicSystems.add<PlayerControlSystem>(input);
   logicSystems.add<MovementSystem>();
@@ -130,17 +132,25 @@ Game::Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
 
   auto walkerEntity = registry.create();
   registry.add(walkerEntity, Walker{});
-  registry.add(walkerEntity, GridPosition{1, 2});
-  registry.add(walkerEntity, SpriteSheet{.textureId{playerTextureId},
+  registry.add(walkerEntity, GridPosition{4, 4});
+  registry.add(walkerEntity, SpriteSheet{.textureId{walkerTextureId},
                                          .spriteId{0},
-                                         .width{32},
-                                         .height{32},
-                                         .cols{2},
-                                         .rows{2}});
+                                         .width{240},
+                                         .height{256},
+                                         .cols{5},
+                                         .rows{4}});
+  // TODO: Walker right-down idle: {0}
+  // TODO: Walker right-down animation walk: {1, 2, 3, 4}
+  // TODO: Walker down-left idle: {5}
+  // TODO: Walker down-left animation walk: {6, 7, 8, 9}
+  // TODO: Walker left-up idle: {10}
+  // TODO: Walker left-up animation walk: {11, 12, 13, 14}
+  // TODO: Walker up-right idle: {15}
+  // TODO: Walker up-right animation walk: {16, 17, 18, 19}
   registry.add(
       walkerEntity,
-      Animation{.frames{0, 1, 2, 3},
-                .frameTime{std::chrono::duration<float>(1.0f / 8.0f)}});
+      Animation{.frames{11, 12, 13, 14},
+                .frameTime{std::chrono::duration<float>(1.0f / 6.0f)}});
   registry.add(walkerEntity, RenderLayer{3});
 }
 
