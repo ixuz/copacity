@@ -4,6 +4,7 @@
 #include "core/gfx/DrawCallQueue.h"
 #include "core/gfx/RenderPipeline.h"
 #include "core/gfx/Renderer.h"
+#include "core/gfx/Window.h"
 #include "core/input/Input.h"
 
 #include "game/components/Animation.h"
@@ -19,7 +20,11 @@
 #include "game/components/RenderLayer.h"
 #include "game/components/Sprite.h"
 #include "game/components/SpriteSheet.h"
+#include "game/components/Texture.h"
+#include "game/components/TextureAtlas.h"
+#include "game/components/TextureTileMap.h"
 #include "game/components/TileMap.h"
+#include "game/components/Transform.h"
 #include "game/components/Velocity.h"
 #include "game/components/Walker.h"
 
@@ -30,6 +35,7 @@
 #include "game/systems/RenderNavMapSystem.h"
 #include "game/systems/RenderSpriteSheetSystem.h"
 #include "game/systems/RenderTileMapSystem.h"
+#include "game/systems/Tilemap2DRenderSystem.h"
 #include "game/systems/WalkerSystem.h"
 
 #include "game/TileBasis.h"
@@ -38,7 +44,8 @@
 #include <format>
 #include <iostream>
 
-Game::Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
+Game::Game(gfx::Window &window, gfx::Renderer &renderer,
+           gfx::RenderPipeline &renderPipeline,
            gfx::DrawCallQueue &drawCallQueue, gfx::Assets &assets,
            input::Input &input, float ticksPerSecond, float pixelsPerUnit)
     : renderer(renderer), renderPipeline(renderPipeline),
@@ -57,6 +64,10 @@ Game::Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
   auto walkerTextureId = renderer.loadTexture(walkerImageData);
   auto buildingsTextureId = renderer.loadTexture(buildingsImageData);
 
+  (void)navTextureId;
+  (void)walkerTextureId;
+  (void)buildingsTextureId;
+
   logicSystems.add<CameraSystem>(input);
   logicSystems.add<MovementSystem>();
   logicSystems.add<WalkerSystem>();
@@ -67,11 +78,21 @@ Game::Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
   renderSystems.add<RenderSpriteSheetSystem>(drawCallQueue, pixelsPerUnit,
                                              tileBasis);
   renderSystems.add<RenderNavMapSystem>(drawCallQueue);
+  renderSystems.add<Tilemap2DRenderSystem>(window, renderer, drawCallQueue,
+                                           pixelsPerUnit);
   renderSystems.add<PrintFpsSystem>();
 
   auto cameraEntity = registry.create();
-  registry.add(cameraEntity, Camera{});
-  registry.add(cameraEntity, Position{-5, -3});
+  registry.add(cameraEntity, Camera{.zoom{4.0f}});
+  registry.add(cameraEntity, Position{0, 0});
+
+  auto textureEntity = registry.create();
+  registry.add(textureEntity, Transform{.position{-0.5f, -0.5f}, .size{1, 1}});
+  registry.add(textureEntity, Texture{.textureId{tilesTextureId}});
+  registry.add(textureEntity, TextureAtlas{.cols{4}, .rows{1}});
+  registry.add(textureEntity,
+               TextureTileMap{.width{2}, .height{2}, .tiles{0, 1, 2, 3}});
+  registry.add(textureEntity, RenderLayer{100000});
 
   auto terrainEntity = registry.create();
   registry.add(terrainEntity, Map{});

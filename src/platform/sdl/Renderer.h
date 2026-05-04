@@ -26,6 +26,11 @@ public:
   void endFrame() override;
   SDL_Renderer *getSdlRenderer() const;
   core::TextureId loadTexture(gfx::ImageData &imageData) override;
+  int getTextureWidth(core::TextureId &textureId) override;
+  int getTextureHeight(core::TextureId &textureId) override;
+
+private:
+  SDL_Texture *getTexture(core::TextureId &textureId);
 
 private:
   SDL_Renderer *renderer;

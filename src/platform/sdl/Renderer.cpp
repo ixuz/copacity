@@ -95,5 +95,20 @@ core::TextureId Renderer::loadTexture(gfx::ImageData &imageData) {
   return textureId;
 }
 
+int Renderer::getTextureWidth(core::TextureId &textureId) {
+  return getTexture(textureId)->w;
+}
+int Renderer::getTextureHeight(core::TextureId &textureId) {
+  return getTexture(textureId)->h;
+}
+
+SDL_Texture *Renderer::getTexture(core::TextureId &textureId) {
+  auto it = textures.find(textureId);
+  if (it == textures.end()) {
+    throw std::runtime_error("Texture not found");
+  }
+  return it->second;
+}
+
 } // namespace sdl
 } // namespace platform

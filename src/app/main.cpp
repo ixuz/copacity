@@ -13,8 +13,8 @@ int main() {
   std::string windowTitle = "Copacity";
   int windowWidth = 640;
   int windowHeight = 512;
-  int resolutionWidth = 160;
-  int resolutionHeight = 128;
+  int resolutionWidth = 640;
+  int resolutionHeight = 512;
   float pixelsPerUnit = 16;
   float ticksPerSecond = 4;
 
@@ -27,7 +27,7 @@ int main() {
   gfx::DrawCallQueue drawCallQueue;
   gfx::RenderPipeline renderPipeline(renderer);
 
-  Game game(renderer, renderPipeline, drawCallQueue, assets, input,
+  Game game(window, renderer, renderPipeline, drawCallQueue, assets, input,
             ticksPerSecond, pixelsPerUnit);
   game.run();
 }

@@ -8,6 +8,7 @@
 #include <cstdint>
 
 namespace gfx {
+class Window;
 class Renderer;
 class RenderPipeline;
 class DrawCallQueue;
@@ -20,7 +21,8 @@ class Input;
 
 class Game {
 public:
-  explicit Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
+  explicit Game(gfx::Window &window, gfx::Renderer &renderer,
+                gfx::RenderPipeline &renderPipeline,
                 gfx::DrawCallQueue &drawCallQueue, gfx::Assets &assets,
                 input::Input &input, float ticksPerSecond, float pixelsPerUnit);
   Game(const Game &) = delete;

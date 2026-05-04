@@ -16,6 +16,8 @@ public:
   virtual void endFrame() = 0;
 
   virtual core::TextureId loadTexture(ImageData &imageData) = 0;
+  virtual int getTextureWidth(core::TextureId &textureId) = 0;
+  virtual int getTextureHeight(core::TextureId &textureId) = 0;
 };
 
 } // namespace gfx

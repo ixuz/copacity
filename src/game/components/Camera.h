@@ -1,3 +1,5 @@
 #pragma once
 
-struct Camera {};
+struct Camera {
+  float zoom = 1.0f;
+};
