@@ -32,17 +32,20 @@
 #include "game/systems/RenderTileMapSystem.h"
 #include "game/systems/WalkerSystem.h"
 
+#include "game/TileBasis.h"
+
 #include <chrono>
 #include <format>
 #include <iostream>
 
 Game::Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
            gfx::DrawCallQueue &drawCallQueue, gfx::Assets &assets,
-           input::Input &input, float ticksPerSecond, float pixelsPerUnit,
-           float logicalWidth, float logicalHeight)
+           input::Input &input, float ticksPerSecond, float pixelsPerUnit)
     : renderer(renderer), renderPipeline(renderPipeline),
       drawCallQueue(drawCallQueue), assets(assets), input(input),
       fixedStep(1.0f / ticksPerSecond) {
+
+  auto tileBasis = TileBasis{32, 17};
 
   auto tilesImageData = assets.loadImage("assets/tiles.png");
   auto navImageData = assets.loadImage("assets/nav.png");
@@ -60,9 +63,9 @@ Game::Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
 
   renderSystems.add<AnimationSystem>();
   renderSystems.add<RenderTileMapSystem>(drawCallQueue, pixelsPerUnit,
-                                         logicalWidth, logicalHeight);
+                                         tileBasis);
   renderSystems.add<RenderSpriteSheetSystem>(drawCallQueue, pixelsPerUnit,
-                                             logicalWidth, logicalHeight);
+                                             tileBasis);
   renderSystems.add<RenderNavMapSystem>(drawCallQueue);
   renderSystems.add<PrintFpsSystem>();
 
@@ -74,10 +77,10 @@ Game::Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
   registry.add(terrainEntity, Map{});
   registry.add(terrainEntity, Sprite{.spriteId{0}});
   registry.add(terrainEntity, SpriteSheet{.textureId{tilesTextureId},
-                                          .width{128},
-                                          .height{27},
-                                          .logicalWidth{128},
-                                          .logicalHeight{27},
+                                          .imageWidth{128},
+                                          .imageHeight{27},
+                                          .renderWidth{128},
+                                          .renderHeight{27},
                                           .cols{4},
                                           .rows{1},
                                           .offsetX{16},
@@ -96,10 +99,10 @@ Game::Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
   registry.add(navMapEntity, Map{});
   registry.add(navMapEntity, Sprite{.spriteId{0}});
   registry.add(navMapEntity, SpriteSheet{.textureId{navTextureId},
-                                         .width{128},
-                                         .height{85},
-                                         .logicalWidth{128},
-                                         .logicalHeight{85},
+                                         .imageWidth{128},
+                                         .imageHeight{85},
+                                         .renderWidth{128},
+                                         .renderHeight{85},
                                          .cols{4},
                                          .rows{5},
                                          .offsetX{16},
@@ -131,10 +134,10 @@ Game::Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
   registry.add(buildingEntity, GridDimension{3, 3});
   registry.add(buildingEntity, Sprite{.spriteId{0}});
   registry.add(buildingEntity, SpriteSheet{.textureId{buildingsTextureId},
-                                           .width{512},
-                                           .height{128},
-                                           .logicalWidth{512},
-                                           .logicalHeight{128},
+                                           .imageWidth{512},
+                                           .imageHeight{128},
+                                           .renderWidth{512},
+                                           .renderHeight{128},
                                            .cols{4},
                                            .rows{1},
                                            .offsetX{64},
@@ -150,10 +153,10 @@ Game::Game(gfx::Renderer &renderer, gfx::RenderPipeline &renderPipeline,
   registry.add(walkerEntity, GridDimension{1, 1});
   registry.add(walkerEntity, Sprite{.spriteId{0}});
   registry.add(walkerEntity, SpriteSheet{.textureId{walkerTextureId},
-                                         .width{240},
-                                         .height{256},
-                                         .logicalWidth{240},
-                                         .logicalHeight{256},
+                                         .imageWidth{240},
+                                         .imageHeight{256},
+                                         .renderWidth{240},
+                                         .renderHeight{256},
                                          .cols{5},
                                          .rows{4},
                                          .offsetX{24},

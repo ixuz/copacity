@@ -13,10 +13,9 @@
 #include "game/components/SpriteSheet.h"
 
 RenderSpriteSheetSystem::RenderSpriteSheetSystem(
-    gfx::DrawCallQueue &drawCallQueue, float pixelsPerUnit, float logicalWidth,
-    float logicalHeight)
+    gfx::DrawCallQueue &drawCallQueue, float pixelsPerUnit, TileBasis tileBasis)
     : drawCallQueue(drawCallQueue), pixelsPerUnit(pixelsPerUnit),
-      logicalWidth(logicalWidth), logicalHeight(logicalHeight) {}
+      tileBasis(tileBasis) {}
 
 void RenderSpriteSheetSystem::fixedUpdate(ecs::Registry &,
                                           std::chrono::duration<float>) {}
@@ -38,16 +37,16 @@ void RenderSpriteSheetSystem::update(ecs::Registry &reg,
        reg.view<PreviousGridPosition, GridPosition, GridDimension, SpriteSheet,
                 Sprite, RenderLayer>()) {
 
-    float tileWidth = logicalWidth / pixelsPerUnit;
-    float tileHeight = logicalHeight / pixelsPerUnit;
+    float tileWidth = tileBasis.width / pixelsPerUnit;
+    float tileHeight = tileBasis.height / pixelsPerUnit;
 
-    int spriteWidth = spriteSheet.width / spriteSheet.cols;   // 32
-    int spriteHeight = spriteSheet.height / spriteSheet.rows; // 27
+    int spriteWidth = spriteSheet.imageWidth / spriteSheet.cols;
+    int spriteHeight = spriteSheet.imageHeight / spriteSheet.rows;
 
-    float ratioX = static_cast<float>(spriteSheet.width) /
-                   static_cast<float>(spriteSheet.logicalWidth);
-    float ratioY = static_cast<float>(spriteSheet.height) /
-                   static_cast<float>(spriteSheet.logicalHeight);
+    float ratioX = static_cast<float>(spriteSheet.imageWidth) /
+                   static_cast<float>(spriteSheet.renderWidth);
+    float ratioY = static_cast<float>(spriteSheet.imageHeight) /
+                   static_cast<float>(spriteSheet.renderHeight);
 
     float anchorX =
         (static_cast<float>(spriteSheet.offsetX) / ratioX) / pixelsPerUnit;
@@ -73,16 +72,16 @@ void RenderSpriteSheetSystem::update(ecs::Registry &reg,
     float isoX = (x - y) * (tileWidth * 0.5f);
     float isoY = (x + y) * (tileHeight * 0.5f);
 
-    float spriteLogicalWidth = static_cast<float>(spriteSheet.logicalWidth) /
-                               static_cast<float>(spriteSheet.cols);
-    float spriteLogicalHeight = static_cast<float>(spriteSheet.logicalHeight) /
-                                static_cast<float>(spriteSheet.rows);
+    float spriteRenderWidth = static_cast<float>(spriteSheet.renderWidth) /
+                              static_cast<float>(spriteSheet.cols);
+    float spriteRenderHeight = static_cast<float>(spriteSheet.renderHeight) /
+                               static_cast<float>(spriteSheet.rows);
 
     gfx::Rect dstRect;
     dstRect.x = (isoX - anchorX - cameraX) * pixelsPerUnit;
     dstRect.y = (isoY - anchorY - cameraY) * pixelsPerUnit;
-    dstRect.w = spriteLogicalWidth;
-    dstRect.h = spriteLogicalHeight;
+    dstRect.w = spriteRenderWidth;
+    dstRect.h = spriteRenderHeight;
 
     core::TextureId textureId = spriteSheet.textureId;
 

@@ -14,10 +14,9 @@
 
 RenderTileMapSystem::RenderTileMapSystem(gfx::DrawCallQueue &drawCallQueue,
                                          float pixelsPerUnit,
-                                         float logicalWidth,
-                                         float logicalHeight)
+                                         TileBasis tileBasis)
     : drawCallQueue(drawCallQueue), pixelsPerUnit(pixelsPerUnit),
-      logicalWidth(logicalWidth), logicalHeight(logicalHeight) {}
+      tileBasis(tileBasis) {}
 
 void RenderTileMapSystem::fixedUpdate(ecs::Registry &,
                                       std::chrono::duration<float>) {}
@@ -26,6 +25,8 @@ void RenderTileMapSystem::update(ecs::Registry &reg,
                                  std::chrono::duration<float>, float) {
   float cameraX = 0;
   float cameraY = 0;
+  (void)cameraX;
+  (void)cameraY;
 
   if (auto result = reg.find<Camera, Position>()) {
     auto &[camera, position] = *result;
@@ -36,21 +37,23 @@ void RenderTileMapSystem::update(ecs::Registry &reg,
   for (auto [e, tileMap, spriteSheet, sprite, renderLayer] :
        reg.view<TileMap, SpriteSheet, Sprite, RenderLayer>()) {
 
-    float tileWidth = logicalWidth / pixelsPerUnit;
-    float tileHeight = logicalHeight / pixelsPerUnit;
+    float tileWidth = tileBasis.width / pixelsPerUnit;
+    float tileHeight = tileBasis.height / pixelsPerUnit;
 
-    int spriteWidth = spriteSheet.width / spriteSheet.cols;
-    int spriteHeight = spriteSheet.height / spriteSheet.rows;
+    int spriteWidth = spriteSheet.imageWidth / spriteSheet.cols;
+    int spriteHeight = spriteSheet.imageHeight / spriteSheet.rows;
 
-    float ratioX = static_cast<float>(spriteSheet.width) /
-                   static_cast<float>(spriteSheet.logicalWidth);
-    float ratioY = static_cast<float>(spriteSheet.height) /
-                   static_cast<float>(spriteSheet.logicalHeight);
+    float ratioX = static_cast<float>(spriteSheet.imageWidth) /
+                   static_cast<float>(spriteSheet.renderWidth);
+    float ratioY = static_cast<float>(spriteSheet.imageHeight) /
+                   static_cast<float>(spriteSheet.renderHeight);
 
     float anchorX =
         (static_cast<float>(spriteSheet.offsetX) / ratioX) / pixelsPerUnit;
     float anchorY =
         (static_cast<float>(spriteSheet.offsetY) / ratioY) / pixelsPerUnit;
+    (void)anchorX;
+    (void)anchorY;
 
     for (int y = 0; y < tileMap.height; y++) {
       for (int x = 0; x < tileMap.width; x++) {
@@ -69,18 +72,17 @@ void RenderTileMapSystem::update(ecs::Registry &reg,
         float isoX = static_cast<float>(x - y) * (tileWidth * 0.5f);
         float isoY = static_cast<float>(x + y) * (tileHeight * 0.5f);
 
-        float spriteLogicalWidth =
-            static_cast<float>(spriteSheet.logicalWidth) /
-            static_cast<float>(spriteSheet.cols);
-        float spriteLogicalHeight =
-            static_cast<float>(spriteSheet.logicalHeight) /
+        float spriteRenderWidth = static_cast<float>(spriteSheet.renderWidth) /
+                                  static_cast<float>(spriteSheet.cols);
+        float spriteRenderHeight =
+            static_cast<float>(spriteSheet.renderHeight) /
             static_cast<float>(spriteSheet.rows);
 
         gfx::Rect dstRect;
         dstRect.x = (isoX - anchorX - cameraX) * pixelsPerUnit;
         dstRect.y = (isoY - anchorY - cameraY) * pixelsPerUnit;
-        dstRect.w = spriteLogicalWidth;
-        dstRect.h = spriteLogicalHeight;
+        dstRect.w = spriteRenderWidth;
+        dstRect.h = spriteRenderHeight;
 
         core::TextureId textureId = spriteSheet.textureId;
 

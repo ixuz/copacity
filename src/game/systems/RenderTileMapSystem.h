@@ -3,6 +3,8 @@
 #include "core/ecs/Registry.h"
 #include "core/ecs/Systems.h"
 
+#include "game/TileBasis.h"
+
 #include <chrono>
 #include <format>
 #include <stdexcept>
@@ -14,8 +16,7 @@ class DrawCallQueue;
 class RenderTileMapSystem : public ecs::System {
 public:
   explicit RenderTileMapSystem(gfx::DrawCallQueue &drawCallQueue,
-                               float pixelsPerUnit, float logicalWidth,
-                               float logicalHeight);
+                               float pixelsPerUnit, TileBasis tileBasis);
 
   void fixedUpdate(ecs::Registry &, std::chrono::duration<float>) override;
 
@@ -24,5 +25,5 @@ public:
 private:
   gfx::DrawCallQueue &drawCallQueue;
   float pixelsPerUnit;
-  float logicalWidth, logicalHeight;
+  TileBasis tileBasis;
 };

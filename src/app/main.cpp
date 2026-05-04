@@ -17,8 +17,6 @@ int main() {
   int resolutionHeight = 128;
   float pixelsPerUnit = 16;
   float ticksPerSecond = 4;
-  float logicalWidth = 32;
-  float logicalHeight = 17;
 
   platform::sdl::Init init;
   platform::sdl::Window window(windowTitle, windowWidth, windowHeight);
@@ -30,6 +28,6 @@ int main() {
   gfx::RenderPipeline renderPipeline(renderer);
 
   Game game(renderer, renderPipeline, drawCallQueue, assets, input,
-            ticksPerSecond, pixelsPerUnit, logicalWidth, logicalHeight);
+            ticksPerSecond, pixelsPerUnit);
   game.run();
 }

@@ -4,10 +4,10 @@
 
 struct SpriteSheet {
   core::TextureId textureId;
-  int width;
-  int height;
-  int logicalWidth;
-  int logicalHeight;
+  int imageWidth;
+  int imageHeight;
+  int renderWidth;
+  int renderHeight;
   int cols;
   int rows;
   int offsetX;

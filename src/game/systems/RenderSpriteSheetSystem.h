@@ -3,6 +3,8 @@
 #include "core/ecs/Registry.h"
 #include "core/ecs/Systems.h"
 
+#include "game/TileBasis.h"
+
 #include <algorithm>
 #include <chrono>
 #include <format>
@@ -19,8 +21,7 @@ class DrawCallQueue;
 class RenderSpriteSheetSystem : public ecs::System {
 public:
   explicit RenderSpriteSheetSystem(gfx::DrawCallQueue &drawCallQueue,
-                                   float pixelsPerUnit, float logicalWidth,
-                                   float logicalHeight);
+                                   float pixelsPerUnit, TileBasis tileBasis);
   void fixedUpdate(ecs::Registry &, std::chrono::duration<float>) override;
   void update(ecs::Registry &reg, std::chrono::duration<float> dt,
               float alpha) override;
@@ -28,5 +29,5 @@ public:
 private:
   gfx::DrawCallQueue &drawCallQueue;
   float pixelsPerUnit;
-  float logicalWidth, logicalHeight;
+  TileBasis tileBasis;
 };
