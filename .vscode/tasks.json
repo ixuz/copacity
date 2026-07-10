@@ -16,7 +16,7 @@
     {
       "label": "cmake: build (windows)",
       "type": "shell",
-      "command": "cmake --build --preset conan-windows",
+      "command": "cmake --build --preset conan-windows -j 8 -v",
       "problemMatcher": []
     },
     {

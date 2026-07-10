@@ -16,18 +16,11 @@ RUN apt-get update && apt-get install -y \
     g++-14 \
     && rm -rf /var/lib/apt/lists/*
 
-ARG USER_UID=1000
-ARG USER_GID=1000
+USER ubuntu
+WORKDIR /home/ubuntu
 
-RUN id -u vscode 2>/dev/null || \
-    useradd -m -s /bin/bash vscode && \
-    echo "vscode ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+ENV PATH="/home/ubuntu/.local/bin:${PATH}"
 
-USER vscode
-WORKDIR /home/vscode
-
-ENV PATH="/home/vscode/.local/bin:${PATH}"
-
-RUN pipx install conan
-
-RUN conan profile detect --force
+RUN pipx install conan && \
+    conan profile detect --force && \
+    touch ~/.sudo_as_admin_successful
