@@ -12,9 +12,11 @@
         "C_Cpp.default.compilerPath": "/usr/bin/x86_64-w64-mingw32-g++",
         "C_Cpp.default.cppStandard": "c++23",
         "C_Cpp.default.intelliSenseMode": "linux-gcc-x64",
-        "editor.formatOnSave": true
+        "editor.formatOnSave": false
       },
-      "extensions": []
+      "extensions": [
+        "ms-vscode.cpptools"
+      ]
     }
   }
 }
