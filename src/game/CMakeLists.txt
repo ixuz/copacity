@@ -1,4 +1,3 @@
-find_package(SDL3 REQUIRED)
 find_package(glm REQUIRED)
 
 add_library(game
