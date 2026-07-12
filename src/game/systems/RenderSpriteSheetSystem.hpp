@@ -1,9 +1,9 @@
 #pragma once
 
-#include "core/ecs/Registry.h"
-#include "core/ecs/Systems.h"
+#include "core/ecs/Registry.hpp"
+#include "core/ecs/Systems.hpp"
 
-#include "game/TileBasis.h"
+#include "game/TileBasis.hpp"
 
 #include <algorithm>
 #include <chrono>

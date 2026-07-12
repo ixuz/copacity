@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/gfx/DrawCall.h"
-#include "core/gfx/ImageData.h"
+#include "core/gfx/DrawCall.hpp"
+#include "core/gfx/ImageData.hpp"
 
 namespace gfx {
 

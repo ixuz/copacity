@@ -1,4 +1,4 @@
-#include "Init.h"
+#include "Init.hpp"
 
 #include <SDL3/SDL.h>
 #include <format>

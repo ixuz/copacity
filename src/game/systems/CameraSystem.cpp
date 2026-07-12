@@ -1,7 +1,7 @@
-#include "CameraSystem.h"
+#include "CameraSystem.hpp"
 
-#include "game/components/Camera.h"
-#include "game/components/Position.h"
+#include "game/components/Camera.hpp"
+#include "game/components/Position.hpp"
 
 #include <iostream>
 

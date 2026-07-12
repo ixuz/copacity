@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/input/Input.h"
+#include "core/input/Input.hpp"
 
 namespace platform {
 namespace sdl {

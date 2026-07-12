@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/Types.h"
+#include "core/Types.hpp"
 
-struct Sprite {
+struct Tile {
   core::SpriteId spriteId;
 };

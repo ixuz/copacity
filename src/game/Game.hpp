@@ -1,8 +1,8 @@
 #pragma once
 
-#include "core/ecs/Registry.h"
-#include "core/ecs/Systems.h"
-#include "core/gfx/Init.h"
+#include "core/ecs/Registry.hpp"
+#include "core/ecs/Systems.hpp"
+#include "core/gfx/Init.hpp"
 
 #include <chrono>
 #include <cstdint>

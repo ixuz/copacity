@@ -1,9 +1,9 @@
 #pragma once
 
-#include "core/ecs/Registry.h"
-#include "core/ecs/Systems.h"
-#include "game/components/Position.h"
-#include "game/components/Velocity.h"
+#include "core/ecs/Registry.hpp"
+#include "core/ecs/Systems.hpp"
+#include "game/components/Position.hpp"
+#include "game/components/Velocity.hpp"
 
 class MovementSystem : public ecs::System {
 public:

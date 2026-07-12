@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/gfx/Renderer.h"
+#include "core/gfx/Renderer.hpp"
 
 #include <unordered_map>
 

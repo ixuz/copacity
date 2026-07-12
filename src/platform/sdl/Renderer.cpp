@@ -1,8 +1,8 @@
-#include "Renderer.h"
+#include "Renderer.hpp"
 
-#include "core/gfx/ImageData.h"
+#include "core/gfx/ImageData.hpp"
 
-#include "Window.h"
+#include "Window.hpp"
 
 #include <SDL3/SDL.h>
 #include <format>

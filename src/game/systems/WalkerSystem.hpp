@@ -1,12 +1,12 @@
 #pragma once
 
-#include "core/Types.h"
-#include "core/ecs/Registry.h"
-#include "core/ecs/Systems.h"
+#include "core/Types.hpp"
+#include "core/ecs/Registry.hpp"
+#include "core/ecs/Systems.hpp"
 
-#include "game/components/GridPosition.h"
-#include "game/components/NavMap.h"
-#include "game/components/PreviousGridPosition.h"
+#include "game/components/GridPosition.hpp"
+#include "game/components/NavMap.hpp"
+#include "game/components/PreviousGridPosition.hpp"
 
 class WalkerSystem : public ecs::System {
 public:

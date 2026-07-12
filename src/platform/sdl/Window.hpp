@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/gfx/Window.h"
+#include "core/gfx/Window.hpp"
 
 #include <string>
 #include <string_view>

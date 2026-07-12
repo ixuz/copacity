@@ -1,11 +1,11 @@
-#include "core/Foo.h"
+#include "core/Foo.hpp"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include "core/Bar.h"
+#include "core/Bar.hpp"
 
-#include "mocks/BarMock.h"
+#include "mocks/BarMock.hpp"
 
 TEST(FooTest, DelegatesRunToBar) {
   // Arrange

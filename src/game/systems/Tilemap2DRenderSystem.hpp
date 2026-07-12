@@ -1,11 +1,11 @@
 #pragma once
 
-#include "core/Types.h"
-#include "core/ecs/Registry.h"
-#include "core/ecs/Systems.h"
-#include "core/gfx/DrawCallQueue.h"
-#include "core/gfx/Renderer.h"
-#include "core/gfx/Window.h"
+#include "core/Types.hpp"
+#include "core/ecs/Registry.hpp"
+#include "core/ecs/Systems.hpp"
+#include "core/gfx/DrawCallQueue.hpp"
+#include "core/gfx/Renderer.hpp"
+#include "core/gfx/Window.hpp"
 
 class Tilemap2DRenderSystem : public ecs::System {
 public:

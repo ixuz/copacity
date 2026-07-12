@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/gfx/ImageData.h"
+#include "core/gfx/ImageData.hpp"
 
 #include <string_view>
 

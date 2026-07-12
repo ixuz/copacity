@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/ecs/Registry.h"
-#include "core/ecs/Systems.h"
+#include "core/ecs/Registry.hpp"
+#include "core/ecs/Systems.hpp"
 
 #include <format>
 #include <iostream>

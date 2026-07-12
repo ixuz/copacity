@@ -1,8 +1,8 @@
 #pragma once
 
-#include "core/ecs/Registry.h"
-#include "core/ecs/Systems.h"
-#include "core/input/Input.h"
+#include "core/ecs/Registry.hpp"
+#include "core/ecs/Systems.hpp"
+#include "core/input/Input.hpp"
 
 class CameraSystem : public ecs::System {
 public:

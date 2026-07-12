@@ -1,7 +1,7 @@
-#include "RenderPipeline.h"
+#include "RenderPipeline.hpp"
 
-#include "DrawCallQueue.h"
-#include "Renderer.h"
+#include "DrawCallQueue.hpp"
+#include "Renderer.hpp"
 
 #include <algorithm>
 

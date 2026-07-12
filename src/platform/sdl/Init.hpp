@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/gfx/Init.h"
+#include "core/gfx/Init.hpp"
 
 namespace platform {
 namespace sdl {

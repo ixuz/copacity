@@ -1,4 +1,4 @@
-#include "core/FixedPoint.h"
+#include "core/FixedPoint.hpp"
 
 #include <gtest/gtest.h>
 

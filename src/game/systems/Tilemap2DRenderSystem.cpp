@@ -1,12 +1,12 @@
-#include "Tilemap2DRenderSystem.h"
+#include "Tilemap2DRenderSystem.hpp"
 
-#include "game/components/Camera.h"
-#include "game/components/Position.h"
-#include "game/components/RenderLayer.h"
-#include "game/components/Texture.h"
-#include "game/components/TextureAtlas.h"
-#include "game/components/TextureTileMap.h"
-#include "game/components/Transform.h"
+#include "game/components/Camera.hpp"
+#include "game/components/Position.hpp"
+#include "game/components/RenderLayer.hpp"
+#include "game/components/Texture.hpp"
+#include "game/components/TextureAtlas.hpp"
+#include "game/components/TextureTileMap.hpp"
+#include "game/components/Transform.hpp"
 
 #include <format>
 #include <glm/ext/matrix_clip_space.hpp>

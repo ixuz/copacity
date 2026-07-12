@@ -1,4 +1,4 @@
-#include "Assets.h"
+#include "Assets.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 

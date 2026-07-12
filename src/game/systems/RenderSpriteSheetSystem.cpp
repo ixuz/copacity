@@ -1,16 +1,16 @@
-#include "RenderSpriteSheetSystem.h"
+#include "RenderSpriteSheetSystem.hpp"
 
-#include "core/gfx/DrawCall.h"
-#include "core/gfx/DrawCallQueue.h"
-#include "core/gfx/RenderPipeline.h"
-#include "game/components/Camera.h"
-#include "game/components/GridDimension.h"
-#include "game/components/GridPosition.h"
-#include "game/components/Position.h"
-#include "game/components/PreviousGridPosition.h"
-#include "game/components/RenderLayer.h"
-#include "game/components/Sprite.h"
-#include "game/components/SpriteSheet.h"
+#include "core/gfx/DrawCall.hpp"
+#include "core/gfx/DrawCallQueue.hpp"
+#include "core/gfx/RenderPipeline.hpp"
+#include "game/components/Camera.hpp"
+#include "game/components/GridDimension.hpp"
+#include "game/components/GridPosition.hpp"
+#include "game/components/Position.hpp"
+#include "game/components/PreviousGridPosition.hpp"
+#include "game/components/RenderLayer.hpp"
+#include "game/components/Sprite.hpp"
+#include "game/components/SpriteSheet.hpp"
 
 RenderSpriteSheetSystem::RenderSpriteSheetSystem(
     gfx::DrawCallQueue &drawCallQueue, float pixelsPerUnit, TileBasis tileBasis)

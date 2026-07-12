@@ -1,10 +1,10 @@
 #pragma once
 
-#include "core/ecs/Registry.h"
-#include "core/ecs/Systems.h"
-#include "game/components/Animation.h"
-#include "game/components/Sprite.h"
-#include "game/components/SpriteSheet.h"
+#include "core/ecs/Registry.hpp"
+#include "core/ecs/Systems.hpp"
+#include "game/components/Animation.hpp"
+#include "game/components/Sprite.hpp"
+#include "game/components/SpriteSheet.hpp"
 
 #include <iostream>
 

@@ -1,6 +1,6 @@
-#include "WalkerSystem.h"
+#include "WalkerSystem.hpp"
 
-#include "game/components/Walker.h"
+#include "game/components/Walker.hpp"
 
 #include <iostream>
 

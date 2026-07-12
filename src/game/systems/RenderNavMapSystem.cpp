@@ -1,10 +1,10 @@
-#include "RenderNavMapSystem.h"
+#include "RenderNavMapSystem.hpp"
 
-#include "core/gfx/DrawCall.h"
-#include "core/gfx/DrawCallQueue.h"
-#include "game/components/NavMap.h"
-#include "game/components/RenderLayer.h"
-#include "game/components/TileMap.h"
+#include "core/gfx/DrawCall.hpp"
+#include "core/gfx/DrawCallQueue.hpp"
+#include "game/components/NavMap.hpp"
+#include "game/components/RenderLayer.hpp"
+#include "game/components/TileMap.hpp"
 
 #include <format>
 #include <iostream>

@@ -1,13 +1,13 @@
-#include "core/gfx/Assets.h"
-#include "core/gfx/DrawCallQueue.h"
-#include "core/gfx/RenderPipeline.h"
+#include "core/gfx/Assets.hpp"
+#include "core/gfx/DrawCallQueue.hpp"
+#include "core/gfx/RenderPipeline.hpp"
 
-#include "platform/sdl/Init.h"
-#include "platform/sdl/Input.h"
-#include "platform/sdl/Renderer.h"
-#include "platform/sdl/Window.h"
+#include "platform/sdl/Init.hpp"
+#include "platform/sdl/Input.hpp"
+#include "platform/sdl/Renderer.hpp"
+#include "platform/sdl/Window.hpp"
 
-#include "game/Game.h"
+#include "game/Game.hpp"
 
 int main() {
   std::string windowTitle = "Copacity";

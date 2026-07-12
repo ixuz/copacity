@@ -1,6 +1,6 @@
-#include "Foo.h"
+#include "Foo.hpp"
 
-#include "Bar.h"
+#include "Bar.hpp"
 
 Foo::Foo(Bar &bar) : bar(bar) {}
 

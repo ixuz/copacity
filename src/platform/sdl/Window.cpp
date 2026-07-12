@@ -1,4 +1,4 @@
-#include "Window.h"
+#include "Window.hpp"
 
 #include <SDL3/SDL.h>
 
