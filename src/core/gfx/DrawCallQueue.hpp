@@ -8,9 +8,9 @@ namespace gfx {
 
 class DrawCallQueue {
 public:
-  void submit(const DrawCall &dc);
-  void clear();
-  const std::vector<DrawCall> &getDrawCalls() const;
+  void submit(const DrawCall &dc) { drawCalls.push_back(dc); };
+  void clear() { drawCalls.clear(); };
+  const std::vector<DrawCall> &getDrawCalls() const { return drawCalls; };
 
 private:
   std::vector<DrawCall> drawCalls;

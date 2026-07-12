@@ -6,9 +6,10 @@
 #include <stb_image.h>
 #include <stdexcept>
 
-namespace gfx {
+namespace platform {
+namespace stb {
 
-ImageData Assets::loadImage(std::string_view path) {
+gfx::ImageData Assets::loadImage(std::string_view path) {
   std::string pathStr(path);
 
   int channels = 4;
@@ -21,7 +22,7 @@ ImageData Assets::loadImage(std::string_view path) {
     throw std::runtime_error(std::format("Failed to load image: {}", pathStr));
   }
 
-  ImageData imageData;
+  gfx::ImageData imageData;
   imageData.width = width;
   imageData.height = height;
   imageData.channels = channels;
@@ -34,4 +35,5 @@ ImageData Assets::loadImage(std::string_view path) {
   return imageData;
 }
 
-} // namespace gfx
+} // namespace stb
+} // namespace platform

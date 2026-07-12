@@ -1,20 +1,38 @@
 #pragma once
 
 #include "DrawCall.hpp"
+#include "DrawCallQueue.hpp"
+#include "Renderer.hpp"
 
 #include <vector>
+#include <algorithm>
 
 namespace gfx {
 
-class Renderer;
-class DrawCallQueue;
-
 class RenderPipeline {
 public:
-  RenderPipeline(Renderer &renderer);
+  RenderPipeline(Renderer &renderer) : renderer(renderer) {};
+
   virtual ~RenderPipeline() = default;
-  void render(const DrawCallQueue &drawCallQueue);
-  Renderer &getRenderer();
+
+  void render(const DrawCallQueue &drawCallQueue) {
+    auto drawCalls = drawCallQueue.getDrawCalls();
+
+    std::sort(drawCalls.begin(), drawCalls.end(),
+              [](const DrawCall &a, const DrawCall &b) {
+                return a.renderLayer < b.renderLayer;
+              });
+
+    renderer.beginFrame();
+
+    for (const auto &drawCall : drawCalls) {
+      renderer.draw(drawCall);
+    }
+
+    renderer.endFrame();
+  }
+
+  Renderer &getRenderer()  { return renderer; };
 
 private:
   Renderer &renderer;

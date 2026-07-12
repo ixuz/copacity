@@ -7,6 +7,8 @@
 #include "platform/sdl/Renderer.hpp"
 #include "platform/sdl/Window.hpp"
 
+#include "platform/stb/Assets.hpp"
+
 #include "game/Game.hpp"
 
 int main() {
@@ -23,7 +25,8 @@ int main() {
   platform::sdl::Renderer renderer(window, resolutionWidth, resolutionHeight);
   platform::sdl::Input input;
 
-  gfx::Assets assets;
+  platform::stb::Assets assets;
+
   gfx::DrawCallQueue drawCallQueue;
   gfx::RenderPipeline renderPipeline(renderer);
 

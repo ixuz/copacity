@@ -8,7 +8,8 @@ namespace gfx {
 
 class Assets {
 public:
-  ImageData loadImage(std::string_view path);
+  virtual ~Assets() = default;
+  virtual ImageData loadImage(std::string_view path) = 0;
 };
 
 } // namespace gfx

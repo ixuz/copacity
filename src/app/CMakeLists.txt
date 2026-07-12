@@ -14,6 +14,7 @@ target_link_libraries(app PRIVATE
     core
     game
     platform_sdl
+    platform_stb
 )
 
 target_link_options(app PRIVATE
