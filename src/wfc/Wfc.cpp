@@ -1,6 +1,8 @@
 #include "Wfc.hpp"
 #include "Constraint.hpp"
 
+namespace wfc {
+
 std::vector<int> Wfc::solve() {
     if (!search()) {
         return {};
@@ -103,3 +105,5 @@ std::vector<int> Wfc::possibleValues(std::size_t cell) const {
 
     return result;
 }
+
+} // namespace wfc

@@ -1,6 +1,5 @@
 add_library(wfc
     Wfc.cpp
-    SudokuConstraint.cpp
 )
 
 target_compile_options(wfc PRIVATE

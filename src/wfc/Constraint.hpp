@@ -2,6 +2,8 @@
 
 #include <deque>
 
+namespace wfc {
+
 class Wfc;
 
 class Constraint {
@@ -13,3 +15,5 @@ public:
         std::deque<std::size_t>& queue
     ) = 0;
 };
+
+} // namespace wfc

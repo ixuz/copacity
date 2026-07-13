@@ -7,6 +7,8 @@
 #include <vector>
 #include <stdexcept>
 
+namespace wfc {
+
 class Constraint;
 
 class Wfc {
@@ -118,3 +120,5 @@ private:
 
     std::vector<Constraint*> constraints_;
 };
+
+} // namespace wfc
