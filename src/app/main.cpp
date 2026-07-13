@@ -6,8 +6,10 @@
 #include "platform/sdl/Input.hpp"
 #include "platform/sdl/Renderer.hpp"
 #include "platform/sdl/Window.hpp"
+#include "platform/sdl/Font.hpp"
+#include "platform/sdl/FontLoader.hpp"
 
-#include "platform/stb/Assets.hpp"
+#include "platform/stb/ImageLoader.hpp"
 
 #include "game/Game.hpp"
 
@@ -24,8 +26,10 @@ int main() {
   platform::sdl::Window window(windowTitle, windowWidth, windowHeight);
   platform::sdl::Renderer renderer(window, resolutionWidth, resolutionHeight);
   platform::sdl::Input input;
+  platform::sdl::FontLoader fontLoader;
+  platform::sdl::Font font("assets/fonts/Ubuntu_Mono/UbuntuMono-Regular.ttf", 16);
 
-  platform::stb::Assets assets;
+  platform::stb::ImageLoader imageLoader;
 
   gfx::DrawCallQueue drawCallQueue;
   gfx::RenderPipeline renderPipeline(renderer);
@@ -38,7 +42,8 @@ int main() {
       .renderer{renderer},
       .renderPipeline{renderPipeline},
       .drawCallQueue{drawCallQueue},
-      .assets{assets},
+      .imageLoader{imageLoader},
+      .fontLoader{fontLoader},
       .input{input},
   };
 

@@ -6,6 +6,7 @@ namespace core {
 
 using TextureId = std::uint32_t;
 using SpriteId = std::uint32_t;
+using TextId = std::uint32_t;
 
 enum Direction {
   None = 0,

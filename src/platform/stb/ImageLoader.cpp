@@ -1,4 +1,4 @@
-#include "Assets.hpp"
+#include "ImageLoader.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 
@@ -9,7 +9,7 @@
 namespace platform {
 namespace stb {
 
-gfx::ImageData Assets::loadImage(std::string_view path) {
+gfx::ImageData ImageLoader::loadImage(std::string_view path) {
   std::string pathStr(path);
 
   int channels = 4;

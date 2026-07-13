@@ -1,11 +1,11 @@
 #pragma once
 
-#include "core/gfx/Assets.hpp"
+#include "core/gfx/ImageLoader.hpp"
 
 namespace platform {
 namespace stb {
 
-class Assets : public gfx::Assets {
+class ImageLoader : public gfx::ImageLoader {
 public:
   gfx::ImageData loadImage(std::string_view path) override;
 };

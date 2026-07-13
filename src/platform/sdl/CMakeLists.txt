@@ -2,10 +2,12 @@ find_package(SDL3 REQUIRED)
 find_package(SDL3_ttf REQUIRED CONFIG)
 
 add_library(platform_sdl
+    Font.cpp
     Init.cpp
     Window.cpp
     Renderer.cpp
     Input.cpp
+    FontLoader.cpp
 )
 
 target_link_libraries(platform_sdl PRIVATE

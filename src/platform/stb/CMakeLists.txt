@@ -1,7 +1,7 @@
 find_package(stb REQUIRED)
 
 add_library(platform_stb
-    Assets.cpp
+    ImageLoader.cpp
 )
 
 target_compile_options(platform_stb PRIVATE
