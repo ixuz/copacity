@@ -1,6 +1,6 @@
 {
   "name": "Dev container",
-  "image": "ghcr.io/ixuz/dev-container:v1.0.1",
+  "image": "ghcr.io/ixuz/dev-container:v1.0.2",
   "workspaceFolder": "/workspace",
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
   "remoteUser": "ubuntu",
