@@ -1,5 +1,5 @@
 {
-  "image": "ghcr.io/ixuz/dev-container:v1.0.2",
+  "image": "ghcr.io/ixuz/dev-container:v1.0.3",
   "workspaceFolder": "/copacity",
   "workspaceMount": "source=${localWorkspaceFolder},target=/copacity,type=bind,consistency=cached",
   "remoteUser": "ubuntu",

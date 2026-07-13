@@ -27,6 +27,7 @@
 #include "game/components/Transform.hpp"
 #include "game/components/Velocity.hpp"
 #include "game/components/Walker.hpp"
+#include "game/components/Text.hpp"
 
 #include "game/systems/AnimationSystem.hpp"
 #include "game/systems/CameraSystem.hpp"
@@ -35,6 +36,7 @@
 #include "game/systems/RenderNavMapSystem.hpp"
 #include "game/systems/RenderSpriteSheetSystem.hpp"
 #include "game/systems/RenderTileMapSystem.hpp"
+#include "game/systems/RenderTextSystem.hpp"
 #include "game/systems/Tilemap2DRenderSystem.hpp"
 #include "game/systems/WalkerSystem.hpp"
 
@@ -49,12 +51,15 @@ namespace game {
 Game::Game(GameContext& gameContext, GameSettings& gameSettings)
     : gameContext(gameContext), gameSettings(gameSettings) {
 
+  auto ubuntuMonoRegular16Font = gameContext.fontLoader.loadFont("assets/fonts/Ubuntu_Mono/UbuntuMono-Regular.ttf", 16);
+  auto copacityTextId = gameContext.renderer.loadText(*ubuntuMonoRegular16Font, "Copacity");
+
   auto tileBasis = TileBasis{32, 17};
 
-  auto tilesImageData = gameContext.assets.loadImage("assets/tiles.png");
-  auto navImageData = gameContext.assets.loadImage("assets/nav.png");
-  auto walkerImageData = gameContext.assets.loadImage("assets/walker.png");
-  auto buildingsImageData = gameContext.assets.loadImage("assets/buildings.png");
+  auto tilesImageData = gameContext.imageLoader.loadImage("assets/tiles.png");
+  auto navImageData = gameContext.imageLoader.loadImage("assets/nav.png");
+  auto walkerImageData = gameContext.imageLoader.loadImage("assets/walker.png");
+  auto buildingsImageData = gameContext.imageLoader.loadImage("assets/buildings.png");
 
   auto tilesTextureId = gameContext.renderer.loadTexture(tilesImageData);
   auto navTextureId = gameContext.renderer.loadTexture(navImageData);
@@ -77,11 +82,16 @@ Game::Game(GameContext& gameContext, GameSettings& gameSettings)
   gameContext.renderSystems.add<RenderNavMapSystem>(gameContext.drawCallQueue);
   gameContext.renderSystems.add<Tilemap2DRenderSystem>(gameContext.window, gameContext.renderer, gameContext.drawCallQueue,
                                            gameSettings.pixelsPerUnit);
+  gameContext.renderSystems.add<RenderTextSystem>(gameContext.drawCallQueue);
   gameContext.renderSystems.add<PrintFpsSystem>();
 
   auto cameraEntity = gameContext.registry.create();
   gameContext.registry.add(cameraEntity, Camera{.zoom{4.0f}});
   gameContext.registry.add(cameraEntity, Position{0, 0});
+
+  auto textEntity = gameContext.registry.create();
+  gameContext.registry.add(textEntity, Text{.textId{copacityTextId}});
+  gameContext.registry.add(textEntity, Position{128, 64});
 
   auto textureEntity = gameContext.registry.create();
   gameContext.registry.add(textureEntity, Transform{.position{-0.5f, -0.5f}, .size{1, 1}});

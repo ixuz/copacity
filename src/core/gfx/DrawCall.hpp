@@ -15,4 +15,9 @@ struct DrawCall {
   int renderLayer;
 };
 
+struct TextDrawCall {
+  core::TextId textId;
+  Rect dst;
+};
+
 } // namespace gfx

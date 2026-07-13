@@ -3,8 +3,10 @@
 #include "core/gfx/ImageData.hpp"
 
 #include "Window.hpp"
+#include "Font.hpp"
 
 #include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include <format>
 #include <iostream>
 
@@ -28,6 +30,13 @@ Renderer::~Renderer() {
     }
   }
   textures.clear();
+
+  for (auto &[textId, texture] : fonts) {
+    if (texture) {
+      SDL_DestroyTexture(texture);
+    }
+  }
+  fonts.clear();
 
   if (renderer)
     SDL_DestroyRenderer(renderer);
@@ -58,6 +67,26 @@ void Renderer::draw(const gfx::DrawCall &drawCall) {
                        .h{drawCall.dst.h}};
 
   SDL_RenderTexture(renderer, texture, &srcSdlRect, &dstSdlRect);
+}
+
+void Renderer::drawText(const gfx::TextDrawCall& textDrawCall) {
+  auto it = fonts.find(textDrawCall.textId);
+  if (it == fonts.end()) {
+    throw std::runtime_error("Text not found");
+  }
+
+  SDL_Texture* texture = it->second;
+
+  float w, h;
+
+  SDL_GetTextureSize(texture, &w, &h);
+
+  SDL_FRect dstSdlRect{.x{textDrawCall.dst.x},
+                       .y{textDrawCall.dst.y},
+                       .w{w},
+                       .h{h}};
+
+  SDL_RenderTexture(renderer, texture, NULL, &dstSdlRect);
 }
 
 void Renderer::endFrame() { SDL_RenderPresent(renderer); }
@@ -108,6 +137,37 @@ SDL_Texture *Renderer::getTexture(core::TextureId &textureId) {
     throw std::runtime_error("Texture not found");
   }
   return it->second;
+}
+
+core::TextId Renderer::loadText(gfx::Font &font, std::string_view text) {
+  TTF_Font* ttfFont = TTF_OpenFont(font.getPath().data(), font.getSize());
+  if (!ttfFont) {
+      throw std::runtime_error(
+          std::format("TTF_OpenFont failed: {}", SDL_GetError()));
+  }
+
+  SDL_Color color = { 255, 255, 255, 255 };
+  
+  // Solid rendering (fastest, lowest quality)
+  SDL_Surface* surface = TTF_RenderText_Solid(ttfFont, text.data(), 0, color);
+  
+  if (!surface) {
+    throw std::runtime_error(
+        std::format("TTF_RenderText_Solid failed: {}", SDL_GetError()));
+  }
+
+  SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+  
+  if (!texture) {
+    throw std::runtime_error(
+        std::format("SDL_CreateTextureFromSurface failed: {}", SDL_GetError()));
+  }
+  
+  SDL_DestroySurface(surface);
+
+  core::TextId textId = nextTextureId++;
+  fonts.emplace(textId, texture);
+  return textId;
 }
 
 } // namespace sdl

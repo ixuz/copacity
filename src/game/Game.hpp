@@ -12,7 +12,8 @@ class Window;
 class Renderer;
 class RenderPipeline;
 class DrawCallQueue;
-class Assets;
+class ImageLoader;
+class FontLoader;
 } // namespace gfx
 
 namespace input {
@@ -29,7 +30,8 @@ struct GameContext {
   gfx::Renderer& renderer;
   gfx::RenderPipeline& renderPipeline;
   gfx::DrawCallQueue& drawCallQueue;
-  gfx::Assets& assets;
+  gfx::ImageLoader& imageLoader;
+  gfx::FontLoader& fontLoader;
   input::Input& input;
 };
 

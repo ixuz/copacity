@@ -28,6 +28,11 @@ public:
     for (const auto &drawCall : drawCalls) {
       renderer.draw(drawCall);
     }
+    
+    auto textDrawCalls = drawCallQueue.getTextDrawCalls();
+    for (const auto &textDrawCall : textDrawCalls) {
+      renderer.drawText(textDrawCall);
+    }
 
     renderer.endFrame();
   }
