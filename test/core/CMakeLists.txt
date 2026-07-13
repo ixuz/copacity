@@ -18,6 +18,11 @@ target_link_libraries(core_tests PRIVATE
     GTest::gmock
 )
 
+target_link_options(core_tests PRIVATE
+    -static-libgcc
+    -static-libstdc++
+)
+
 include(GoogleTest)
 include(CTest)
 add_test(NAME core_tests COMMAND core_tests)
