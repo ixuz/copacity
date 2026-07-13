@@ -44,61 +44,58 @@
 #include <format>
 #include <iostream>
 
-Game::Game(gfx::Window &window, gfx::Renderer &renderer,
-           gfx::RenderPipeline &renderPipeline,
-           gfx::DrawCallQueue &drawCallQueue, gfx::Assets &assets,
-           input::Input &input, float ticksPerSecond, float pixelsPerUnit)
-    : renderer(renderer), renderPipeline(renderPipeline),
-      drawCallQueue(drawCallQueue), assets(assets), input(input),
-      fixedStep(1.0f / ticksPerSecond) {
+namespace game {
+
+Game::Game(GameContext& gameContext, GameSettings& gameSettings)
+    : gameContext(gameContext), gameSettings(gameSettings) {
 
   auto tileBasis = TileBasis{32, 17};
 
-  auto tilesImageData = assets.loadImage("assets/tiles.png");
-  auto navImageData = assets.loadImage("assets/nav.png");
-  auto walkerImageData = assets.loadImage("assets/walker.png");
-  auto buildingsImageData = assets.loadImage("assets/buildings.png");
+  auto tilesImageData = gameContext.assets.loadImage("assets/tiles.png");
+  auto navImageData = gameContext.assets.loadImage("assets/nav.png");
+  auto walkerImageData = gameContext.assets.loadImage("assets/walker.png");
+  auto buildingsImageData = gameContext.assets.loadImage("assets/buildings.png");
 
-  auto tilesTextureId = renderer.loadTexture(tilesImageData);
-  auto navTextureId = renderer.loadTexture(navImageData);
-  auto walkerTextureId = renderer.loadTexture(walkerImageData);
-  auto buildingsTextureId = renderer.loadTexture(buildingsImageData);
+  auto tilesTextureId = gameContext.renderer.loadTexture(tilesImageData);
+  auto navTextureId = gameContext.renderer.loadTexture(navImageData);
+  auto walkerTextureId = gameContext.renderer.loadTexture(walkerImageData);
+  auto buildingsTextureId = gameContext.renderer.loadTexture(buildingsImageData);
 
   (void)navTextureId;
   (void)walkerTextureId;
   (void)buildingsTextureId;
 
-  logicSystems.add<CameraSystem>(input);
-  logicSystems.add<MovementSystem>();
-  logicSystems.add<WalkerSystem>();
-
-  renderSystems.add<AnimationSystem>();
-  renderSystems.add<RenderTileMapSystem>(drawCallQueue, pixelsPerUnit,
+  gameContext.logicSystems.add<CameraSystem>(gameContext.input);
+  gameContext.logicSystems.add<MovementSystem>();
+  gameContext.logicSystems.add<WalkerSystem>();
+      
+  gameContext.renderSystems.add<AnimationSystem>();
+  gameContext.renderSystems.add<RenderTileMapSystem>(gameContext.drawCallQueue, gameSettings.pixelsPerUnit,
                                          tileBasis);
-  renderSystems.add<RenderSpriteSheetSystem>(drawCallQueue, pixelsPerUnit,
+  gameContext.renderSystems.add<RenderSpriteSheetSystem>(gameContext.drawCallQueue, gameSettings.pixelsPerUnit,
                                              tileBasis);
-  renderSystems.add<RenderNavMapSystem>(drawCallQueue);
-  renderSystems.add<Tilemap2DRenderSystem>(window, renderer, drawCallQueue,
-                                           pixelsPerUnit);
-  renderSystems.add<PrintFpsSystem>();
+  gameContext.renderSystems.add<RenderNavMapSystem>(gameContext.drawCallQueue);
+  gameContext.renderSystems.add<Tilemap2DRenderSystem>(gameContext.window, gameContext.renderer, gameContext.drawCallQueue,
+                                           gameSettings.pixelsPerUnit);
+  gameContext.renderSystems.add<PrintFpsSystem>();
 
-  auto cameraEntity = registry.create();
-  registry.add(cameraEntity, Camera{.zoom{4.0f}});
-  registry.add(cameraEntity, Position{0, 0});
+  auto cameraEntity = gameContext.registry.create();
+  gameContext.registry.add(cameraEntity, Camera{.zoom{4.0f}});
+  gameContext.registry.add(cameraEntity, Position{0, 0});
 
-  auto textureEntity = registry.create();
-  registry.add(textureEntity, Transform{.position{-0.5f, -0.5f}, .size{1, 1}});
-  registry.add(textureEntity, Texture{.textureId{tilesTextureId}});
-  registry.add(textureEntity, TextureAtlas{.cols{4}, .rows{1}});
-  registry.add(textureEntity,
-               TextureTileMap{.width{2}, .height{2}, .tiles{0, 1, 2, 3}});
-  registry.add(textureEntity, RenderLayer{100000});
+  auto textureEntity = gameContext.registry.create();
+  gameContext.registry.add(textureEntity, Transform{.position{-0.5f, -0.5f}, .size{1, 1}});
+  gameContext.registry.add(textureEntity, Texture{.textureId{tilesTextureId}});
+  gameContext.registry.add(textureEntity, TextureAtlas{.cols{4}, .rows{1}});
+  gameContext.registry.add(textureEntity,
+                           TextureTileMap{.width{2}, .height{2}, .tiles{0, 1, 2, 3}});
+  gameContext.registry.add(textureEntity, RenderLayer{100000});
 
-  auto terrainEntity = registry.create();
-  registry.add(terrainEntity, Map{});
-  registry.add(terrainEntity, Sprite{.spriteId{0}});
-  registry.add(terrainEntity, SpriteSheet{.textureId{tilesTextureId},
-                                          .imageWidth{128},
+  auto terrainEntity = gameContext.registry.create();
+  gameContext.registry.add(terrainEntity, Map{});
+  gameContext.registry.add(terrainEntity, Sprite{.spriteId{0}});
+  gameContext.registry.add(terrainEntity, SpriteSheet{.textureId{tilesTextureId},
+                                                     .imageWidth{128},
                                           .imageHeight{27},
                                           .renderWidth{128},
                                           .renderHeight{27},
@@ -106,7 +103,7 @@ Game::Game(gfx::Window &window, gfx::Renderer &renderer,
                                           .rows{1},
                                           .offsetX{16},
                                           .offsetY{16}});
-  registry.add(terrainEntity,
+  gameContext.registry.add(terrainEntity,
                TileMap{.width{5},
                        .height{5},
                        .tiles{
@@ -114,12 +111,12 @@ Game::Game(gfx::Window &window, gfx::Renderer &renderer,
                            {2}, {0}, {1}, {0}, {1}, {0}, {2}, {3}, {2},
                            {3}, {2}, {0}, {1}, {0}, {1}, {0},
                        }});
-  registry.add(terrainEntity, RenderLayer{10000});
+  gameContext.registry.add(terrainEntity, RenderLayer{10000});
 
-  auto navMapEntity = registry.create();
-  registry.add(navMapEntity, Map{});
-  registry.add(navMapEntity, Sprite{.spriteId{0}});
-  registry.add(navMapEntity, SpriteSheet{.textureId{navTextureId},
+  auto navMapEntity = gameContext.registry.create();
+  gameContext.registry.add(navMapEntity, Map{});
+  gameContext.registry.add(navMapEntity, Sprite{.spriteId{0}});
+  gameContext.registry.add(navMapEntity, SpriteSheet{.textureId{navTextureId},
                                          .imageWidth{128},
                                          .imageHeight{85},
                                          .renderWidth{128},
@@ -128,7 +125,7 @@ Game::Game(gfx::Window &window, gfx::Renderer &renderer,
                                          .rows{5},
                                          .offsetX{16},
                                          .offsetY{16}});
-  registry.add(navMapEntity,
+  gameContext.registry.add(navMapEntity,
                TileMap{.width{5},
                        .height{5},
                        .tiles{
@@ -136,7 +133,7 @@ Game::Game(gfx::Window &window, gfx::Renderer &renderer,
                            {12}, {12}, {12}, {12}, {12}, {12}, {12}, {12}, {12},
                            {12}, {12}, {12}, {12}, {12}, {12}, {12},
                        }});
-  registry.add(
+  gameContext.registry.add(
       navMapEntity,
       NavMap{.width{5},
              .height{5},
@@ -146,34 +143,34 @@ Game::Game(gfx::Window &window, gfx::Renderer &renderer,
                  {true},  {true},  {false}, {false}, {false}, {true},  {true},
                  {true},  {true},  {true},  {true},
              }});
-  registry.add(navMapEntity, RenderLayer{20000});
+  gameContext.registry.add(navMapEntity, RenderLayer{20000});
 
-  auto buildingEntity = registry.create();
-  registry.add(buildingEntity, Building{});
-  registry.add(buildingEntity, PreviousGridPosition{3, 3});
-  registry.add(buildingEntity, GridPosition{3, 3});
-  registry.add(buildingEntity, GridDimension{3, 3});
-  registry.add(buildingEntity, Sprite{.spriteId{0}});
-  registry.add(buildingEntity, SpriteSheet{.textureId{buildingsTextureId},
-                                           .imageWidth{512},
-                                           .imageHeight{128},
-                                           .renderWidth{512},
-                                           .renderHeight{128},
-                                           .cols{4},
-                                           .rows{1},
-                                           .offsetX{64},
-                                           .offsetY{126}});
-  registry.add(buildingEntity, RenderLayer{30000});
+  auto buildingEntity = gameContext.registry.create();
+  gameContext.registry.add(buildingEntity, Building{});
+  gameContext.registry.add(buildingEntity, PreviousGridPosition{3, 3});
+  gameContext.registry.add(buildingEntity, GridPosition{3, 3});
+  gameContext.registry.add(buildingEntity, GridDimension{3, 3});
+  gameContext.registry.add(buildingEntity, Sprite{.spriteId{0}});
+  gameContext.registry.add(buildingEntity, SpriteSheet{.textureId{buildingsTextureId},
+                                                       .imageWidth{512},
+                                                       .imageHeight{128},
+                                                       .renderWidth{512},
+                                                       .renderHeight{128},
+                                                       .cols{4},
+                                                       .rows{1},
+                                                       .offsetX{64},
+                                                       .offsetY{126}});
+  gameContext.registry.add(buildingEntity, RenderLayer{30000});
 
-  auto walkerEntity = registry.create();
-  registry.add(walkerEntity,
+  auto walkerEntity = gameContext.registry.create();
+  gameContext.registry.add(walkerEntity,
                Walker{.walking{false},
                       .currentWalkingDirection{core::Direction::Right}});
-  registry.add(walkerEntity, PreviousGridPosition{0, 0});
-  registry.add(walkerEntity, GridPosition{0, 0});
-  registry.add(walkerEntity, GridDimension{1, 1});
-  registry.add(walkerEntity, Sprite{.spriteId{0}});
-  registry.add(walkerEntity, SpriteSheet{.textureId{walkerTextureId},
+  gameContext.registry.add(walkerEntity, PreviousGridPosition{0, 0});
+  gameContext.registry.add(walkerEntity, GridPosition{0, 0});
+  gameContext.registry.add(walkerEntity, GridDimension{1, 1});
+  gameContext.registry.add(walkerEntity, Sprite{.spriteId{0}});
+  gameContext.registry.add(walkerEntity, SpriteSheet{.textureId{walkerTextureId},
                                          .imageWidth{240},
                                          .imageHeight{256},
                                          .renderWidth{240},
@@ -241,8 +238,8 @@ Game::Game(gfx::Window &window, gfx::Renderer &renderer,
       .looping = true,
       .currentSpriteFrame = 0};
   walkerAnimation.sortRulesByPriority();
-  registry.add(walkerEntity, walkerAnimation);
-  registry.add(walkerEntity, RenderLayer{30000});
+  gameContext.registry.add(walkerEntity, walkerAnimation);
+  gameContext.registry.add(walkerEntity, RenderLayer{30000});
 }
 
 // TODO: Decouple simulation from render thread
@@ -256,9 +253,9 @@ void Game::run() {
 
   bool running = true;
   while (running) {
-    auto keyboard = input.getKeyboard();
+    auto keyboard = gameContext.input.getKeyboard();
 
-    drawCallQueue.clear();
+    gameContext.drawCallQueue.clear();
 
     if (keyboard.escape)
       running = false;
@@ -270,15 +267,17 @@ void Game::run() {
     totalTime += dt;
     accumulator += dt;
 
-    while (accumulator >= fixedStep) {
-      logicSystems.fixedUpdate(registry, fixedStep);
-      accumulator -= fixedStep;
+    while (accumulator >= gameSettings.fixedStep) {
+      gameContext.logicSystems.fixedUpdate(gameContext.registry, gameSettings.fixedStep);
+      accumulator -= gameSettings.fixedStep;
       tick++;
     }
 
-    float alpha = accumulator / fixedStep;
-    renderSystems.update(registry, dt, alpha);
+    float alpha = accumulator / gameSettings.fixedStep;
+    gameContext.renderSystems.update(gameContext.registry, dt, alpha);
 
-    renderPipeline.render(drawCallQueue);
+    gameContext.renderPipeline.render(gameContext.drawCallQueue);
   }
 }
+
+} // namespace game

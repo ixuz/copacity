@@ -30,7 +30,25 @@ int main() {
   gfx::DrawCallQueue drawCallQueue;
   gfx::RenderPipeline renderPipeline(renderer);
 
-  Game game(window, renderer, renderPipeline, drawCallQueue, assets, input,
-            ticksPerSecond, pixelsPerUnit);
+  game::GameContext gameContext{
+      .registry{},
+      .logicSystems{},
+      .renderSystems{},
+      .window{window},
+      .renderer{renderer},
+      .renderPipeline{renderPipeline},
+      .drawCallQueue{drawCallQueue},
+      .assets{assets},
+      .input{input},
+  };
+
+  game::GameSettings gameSettings{
+      .ticksPerSecond{ticksPerSecond},
+      .pixelsPerUnit{pixelsPerUnit},
+      .fixedStep{std::chrono::duration<float>{1.0f / ticksPerSecond}},
+  };
+
+  game::Game game(gameContext, gameSettings);
+
   game.run();
 }

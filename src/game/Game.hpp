@@ -19,12 +19,29 @@ namespace input {
 class Input;
 }
 
+namespace game {
+
+struct GameContext {
+  ecs::Registry registry;
+  ecs::Systems logicSystems;
+  ecs::Systems renderSystems;
+  gfx::Window &window;
+  gfx::Renderer& renderer;
+  gfx::RenderPipeline& renderPipeline;
+  gfx::DrawCallQueue& drawCallQueue;
+  gfx::Assets& assets;
+  input::Input& input;
+};
+
+struct GameSettings {
+  float ticksPerSecond;
+  float pixelsPerUnit;
+  std::chrono::duration<float> fixedStep;
+};
+
 class Game {
 public:
-  explicit Game(gfx::Window &window, gfx::Renderer &renderer,
-                gfx::RenderPipeline &renderPipeline,
-                gfx::DrawCallQueue &drawCallQueue, gfx::Assets &assets,
-                input::Input &input, float ticksPerSecond, float pixelsPerUnit);
+  explicit Game(GameContext& context, GameSettings& settings);
   Game(const Game &) = delete;
   Game &operator=(const Game &) = delete;
   Game(Game &&) = default;
@@ -33,14 +50,9 @@ public:
   void run();
 
 private:
-  gfx::Renderer &renderer;
-  gfx::RenderPipeline &renderPipeline;
-  gfx::DrawCallQueue &drawCallQueue;
-  gfx::Assets &assets;
-  input::Input &input;
-  ecs::Registry registry;
-  ecs::Systems logicSystems;
-  ecs::Systems renderSystems;
-  std::chrono::duration<float> fixedStep;
+  GameContext& gameContext;
+  GameSettings& gameSettings;
   std::uint64_t tick = 0;
 };
+
+} // namespace game
