@@ -12,3 +12,5 @@ CXX=x86_64-w64-mingw32-g++
 RC=x86_64-w64-mingw32-windres
 [conf]
 tools.system.package_manager:mode=install
+tools.build:compiler_executables={"c":"x86_64-w64-mingw32-gcc","cpp":"x86_64-w64-mingw32-g++","rc":"x86_64-w64-mingw32-windres"}
+tools.meson.mesontoolchain:extra_variables={"binaries":{"windres":"x86_64-w64-mingw32-windres"}}
