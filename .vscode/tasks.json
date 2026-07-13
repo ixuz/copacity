@@ -49,7 +49,7 @@
     {
       "label": "test (linux)",
       "type": "shell",
-      "command": "./bin/core_tests",
+      "command": "./bin/core_tests && ./bin/wfc_tests",
       "problemMatcher": []
     },
     {
