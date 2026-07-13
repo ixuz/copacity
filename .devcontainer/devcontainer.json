@@ -1,8 +1,7 @@
 {
-  "name": "Dev container",
   "image": "ghcr.io/ixuz/dev-container:v1.0.2",
-  "workspaceFolder": "/workspace",
-  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+  "workspaceFolder": "/copacity",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/copacity,type=bind,consistency=cached",
   "remoteUser": "ubuntu",
   "updateRemoteUserUID": true,
   "customizations": {
