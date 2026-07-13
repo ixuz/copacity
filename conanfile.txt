@@ -1,6 +1,7 @@
 [requires]
 gtest/1.17.0
 sdl/3.4.0
+sdl_ttf/3.2.2
 stb/cci.20240531
 glm/1.0.1
 

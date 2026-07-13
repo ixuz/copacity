@@ -1,4 +1,5 @@
 find_package(SDL3 REQUIRED)
+find_package(SDL3_ttf REQUIRED CONFIG)
 
 add_library(platform_sdl
     Init.cpp
@@ -9,6 +10,7 @@ add_library(platform_sdl
 
 target_link_libraries(platform_sdl PRIVATE
     sdl::sdl
+    SDL3_ttf::SDL3_ttf-static
     core
 )
 
